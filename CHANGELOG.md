@@ -1,3 +1,3 @@
-## [0.0.1] - 2019-10-04.
+## [0.0.1] - 04/10/2019
 
-* The initial release.
+* The initial release
