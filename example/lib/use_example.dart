@@ -70,8 +70,8 @@ class _UseSnapSheetExampleState extends State<UseSnapSheetExample> with SingleTi
         snapSheetController: _controller,
         snapPositions: const [
           SnapPosition(positionPixel: 0.0, snappingCurve: Curves.elasticOut, snappingDuration: Duration(milliseconds: 750)),
-          SnapPosition(positionPercent: 0.4),
-          SnapPosition(positionPercent: 0.8),
+          SnapPosition(positionFactor: 0.4),
+          SnapPosition(positionFactor: 0.8),
         ],
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

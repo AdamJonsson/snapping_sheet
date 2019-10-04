@@ -5,12 +5,12 @@ import 'package:flutter/widgets.dart';
 /// A snapping position that tells how a [SnappingSheet] snapps to different positions
 class SnapPosition {
   /// The snapping position in pixels
-  /// [positionPercent] must be null if this is used.
+  /// [positionFactor] should be null if this is used.
   final double positionPixel;
 
-  /// The snapping position in percent of the
-  /// available height. [positionPixel] must be null if this is used.
-  final double positionPercent;
+  /// The snapping position in relation of the
+  /// available height. [positionPixel] should be null if this is used.
+  final double positionFactor;
 
   /// The animation curve to this snapping position
   final Curve snappingCurve;
@@ -19,7 +19,7 @@ class SnapPosition {
   final Duration snappingDuration;
 
   const SnapPosition(
-      {this.positionPercent,
+      {this.positionFactor,
       this.positionPixel,
       this.snappingCurve = Curves.easeOutExpo,
       this.snappingDuration = const Duration(milliseconds: 500)});
@@ -29,7 +29,7 @@ class SnapPosition {
     if (positionPixel != null) {
       return positionPixel;
     }
-    return height * positionPercent;
+    return height * positionFactor;
   }
 }
 
@@ -82,8 +82,8 @@ class SnappingSheet extends StatefulWidget {
     this.grabingHeight = 75.0,
     this.snapPositions = const [
       SnapPosition(positionPixel: 0.0),
-      SnapPosition(positionPercent: 0.5),
-      SnapPosition(positionPercent: 0.9),
+      SnapPosition(positionFactor: 0.5),
+      SnapPosition(positionFactor: 0.9),
     ],
     this.initSnapPosition,
     this.remaining,
