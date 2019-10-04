@@ -1,7 +1,7 @@
 name: snapping_sheet
 description: A new Flutter package project.
 version: 0.0.1
-author: Adam Jonsson
+author: Adam Jonsson <adamsmajl@gmail.com>
 homepage: https://github.com/AdamJonsson/snapping_sheet
 
 environment:
