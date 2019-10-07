@@ -34,7 +34,7 @@ You can add the snapping sheet to you app by adding the following code
                     sheet: Container(
                         color: Colors.red
                     ),
-                    grabing: Container(
+                    grabbing: Container(
                         color: Colors.blue,
                     ),
                 ),
