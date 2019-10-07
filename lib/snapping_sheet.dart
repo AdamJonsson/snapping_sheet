@@ -124,6 +124,7 @@ class _SnappingSheetState extends State<SnappingSheet>
 
     // Set the init snap position
     _initSnapPosition = widget.initSnapPosition ?? widget.snapPositions.first;
+    _lastSnappingLocation = _initSnapPosition;
 
     // Create the snapping controller
     _snappingAnimationController = AnimationController(
@@ -162,20 +163,36 @@ class _SnappingSheetState extends State<SnappingSheet>
     double minDistance;
     SnapPosition closestSnapPosition;
 
+    // Check if the user is dragging downwards or upwards
+    final isDraggingUpwards = _currentDragAmount > _lastSnappingLocation._getPositionInPixels(_currentConstraints.maxHeight);
+    print('Is dragging upwards: ' + isDraggingUpwards.toString());
+    print('Test');
+
     // Find the closest snapping position
     for (var snapPosition in widget.snapPositions) {
+
+      final snapPositionPixels = snapPosition._getPositionInPixels(_currentConstraints.maxHeight);
+
+      if(snapPosition != _lastSnappingLocation) {
+        // Ignore snap positions below if dragging upwards
+        if (isDraggingUpwards && snapPositionPixels < _currentDragAmount) {
+          continue;
+        }
+
+        // Ignore snap positions above if dragging downwards
+        if (!isDraggingUpwards && snapPositionPixels > _currentDragAmount) {
+          continue;
+        }
+      }
+
       // Getting the distance to the current snapPosition
-      var snappingDistance =
-          (snapPosition._getPositionInPixels(_currentConstraints.maxHeight) -
-                  _currentDragAmount)
-              .abs();
+      var snappingDistance = (snapPositionPixels - _currentDragAmount).abs();
 
       // It should be hard to snap to the last snapping location.
       var snappingFactor = snapPosition == _lastSnappingLocation ? 0.1 : 1;
 
       // Check if this snapPosition has the minimum distance
-      if (minDistance == null ||
-          minDistance > snappingDistance / snappingFactor) {
+      if (minDistance == null || minDistance > snappingDistance / snappingFactor) {
         minDistance = snappingDistance / snappingFactor;
         closestSnapPosition = snapPosition;
       }
