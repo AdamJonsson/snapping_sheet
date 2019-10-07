@@ -48,9 +48,6 @@ class _UseSnapSheetExampleState extends State<UseSnapSheetExample> with SingleTi
                 child: Icon(Icons.arrow_upward),
                 turns: _arrowIconAnimation,
               ),
-              // child: Icon(_controller.snapPositions?.last == _controller.currentSnapPosition 
-              //     ? Icons.arrow_downward
-              //     : Icons.arrow_upward),
             ),
           ),
         ),
