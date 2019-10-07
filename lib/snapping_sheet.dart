@@ -76,8 +76,8 @@ class SnappingSheet extends StatefulWidget {
 
   const SnappingSheet({
     Key key,
-    @required this.child,
     @required this.sheet,
+    this.child,
     this.grabing,
     this.grabingHeight = 75.0,
     this.snapPositions = const [
@@ -240,6 +240,7 @@ class _SnappingSheetState extends State<SnappingSheet>
         _currentConstraints.maxHeight - widget.grabingHeight);
   }
 
+  /// Builds the widget for the remaning space
   Widget _buildRemaining() {
     if (widget.remaining == null) {
       return SizedBox();
@@ -255,6 +256,17 @@ class _SnappingSheetState extends State<SnappingSheet>
         child: widget.remaining);
   }
 
+  /// Builds the widget located behind the sheet
+  Widget _buildBackground() {
+    if (widget.child == null) {
+      return SizedBox();
+    }
+
+    return Positioned.fill(
+      child: widget.child,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
@@ -265,9 +277,7 @@ class _SnappingSheetState extends State<SnappingSheet>
 
       return Stack(fit: StackFit.expand, children: <Widget>[
         // The widget behind the sheet
-        Positioned.fill(
-          child: widget.child,
-        ),
+        _buildBackground(),
 
         // The widget of the remaining space
         _buildRemaining(),
