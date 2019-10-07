@@ -1,23 +1,23 @@
 # Snapping sheet
 
-A package that provides a bottom sheet widget that snaps to different vertical positions
+A package that provides a highly customizable bottom sheet widget that snaps to different vertical positions
 
 <table>
     <tr>
-        <td>How the layout looks like</td>
-        <td>A app example with SnappingSheet</td>
+        <td>Using only placeholders</td>
+        <td>A more robust example</td>
     <tr>
     <tr>
         <td>
-            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/layoutExample.gif" width="250">
+            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/layoutExample.gif" width="275">
         </td>
         <td>
-            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/useExample.gif" width="250">
+            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/useExample.gif" width="275">
         </td>
     </tr>
 </table>
 
-## Using
+## Quick start
 
 Begin by following the install instruction.
 
@@ -43,7 +43,7 @@ You can add the snapping sheet to you app by adding the following code
     }
 ```
 
-### Snap positions
+## Snap positions
 
 To change the snap positions for the sheet, change the `snapPositions` parameter 
 witch takes in a list of `SnapPosition`.
