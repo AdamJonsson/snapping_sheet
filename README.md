@@ -5,7 +5,7 @@ A package that provides a highly customizable sheet widget that snaps to differe
 <table>
     <tr>
         <td>Using only placeholders</td>
-        <td>A more robust example</td>
+        <td>ListView</td>
     <tr>
     <tr>
         <td>
@@ -17,9 +17,11 @@ A package that provides a highly customizable sheet widget that snaps to differe
     </tr>
 </table>
 
+You can run the examples by cloning the following [repository](https://github.com/AdamJonsson/snapping_sheet) and run the app from the example folder.
+
 ## Quick start
 
-Begin by following the install instruction.
+Begin by following the [install](https://pub.dev/packages/snapping_sheet#-installing-tab-) instruction.
 
 You can add the snapping sheet to you app by adding the following code
 ```dart
@@ -71,14 +73,14 @@ witch takes in a list of `SnapPosition`.
 |---------------------------|---------------------------------------|
 |child                      |The widget behind the sheet.|
 |sheetBelow                 |The widget that is the remaining space between the bottom to the bottom of the grabbing widget.|
-|sheetAbove                 |The widget that is the remaining space between the top to the top of the grabbing widget. |
+|sheetAbove                 |The widget that is the remaining space between the top to the top of the grabbing widget|
 |grabbing                   |The widget fixed between the sheetBelow and sheetAbove.|
 |grabbingHeight             |The height of the grabbing widget.|
 |sheetBelowMargin           |The margin for the sheetBelow widget. Can be negative values.|
 |sheetAboveMargin           |The margin for the sheetAbove widget. Can be negative values.|
 |snapPositions              |The different snap positions for the sheet|
 |initSnapPosition           |The init snap position, do not need to exist in the napPositions list|
-|snapSheetController        |Control the sheet and get current snap position|
+|snappingSheetController        |Control the sheet and get current snap position|
 |onMove                     |Callback when the sheet is moving.|
 |onSnapBegin                |Callback when a snap begins, happens when the user stops dragging the sheet.|
 |onSnapEnd                  |Callback when a snap is completed.|
