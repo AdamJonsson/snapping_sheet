@@ -67,7 +67,7 @@ class SnappingSheet extends StatefulWidget {
   final EdgeInsets sheetBelowMargin;
 
   /// The controller for the [SnappingSheet]
-  final SnapSheetController snapSheetController;
+  final SnappingSheetController snappingSheetController;
 
   /// Is called when the [sheetBelow] is being moved
   final Function(double pixelPosition) onMove;
@@ -92,7 +92,7 @@ class SnappingSheet extends StatefulWidget {
     this.sheetAbove,
     this.sheetBelowMargin = const EdgeInsets.all(0.0),
     this.sheetAboveMargin = const EdgeInsets.all(0.0),
-    this.snapSheetController,
+    this.snappingSheetController,
     this.onMove,
     this.onSnapBegin,
     this.onSnapEnd,
@@ -151,14 +151,14 @@ class _SnappingSheetState extends State<SnappingSheet>
     });
 
     // Connect the given listeners
-    widget.snapSheetController?._addListeners(_snapToPosition);
-    widget.snapSheetController?.snapPositions = widget.snapPositions;
+    widget.snappingSheetController?._addListeners(_snapToPosition);
+    widget.snappingSheetController?.snapPositions = widget.snapPositions;
   }
 
   @override
   void didUpdateWidget(SnappingSheet oldWidget) {
     super.didUpdateWidget(oldWidget);
-    widget.snapSheetController?.snapPositions = widget.snapPositions;
+    widget.snappingSheetController?.snapPositions = widget.snapPositions;
   }
 
   /// Get the closest snapping location
@@ -217,7 +217,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   void _snapToPosition(SnapPosition snapPosition) {
     // Update the info about the last snapping location
     _lastSnappingLocation = snapPosition;
-    widget.snapSheetController?.currentSnapPosition = snapPosition;
+    widget.snappingSheetController?.currentSnapPosition = snapPosition;
 
     // Create a new cureved animation between the current drag amount and the snapping
     // location
@@ -326,7 +326,7 @@ class _SnappingSheetState extends State<SnappingSheet>
 }
 
 /// Controlls the [SnappingSheet] widget
-class SnapSheetController {
+class SnappingSheetController {
   Function(SnapPosition value) _setSnapSheetPositionListener;
 
   /// The different snap positions the [SnappingSheet] currently has.

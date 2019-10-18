@@ -7,7 +7,7 @@ class UseSnapSheetExample extends StatefulWidget {
 }
 
 class _UseSnapSheetExampleState extends State<UseSnapSheetExample> with SingleTickerProviderStateMixin{
-  var _controller = SnapSheetController();
+  var _controller = SnappingSheetController();
   AnimationController _arrowIconAnimationController;
   Animation<double> _arrowIconAnimation;
 
@@ -64,7 +64,7 @@ class _UseSnapSheetExampleState extends State<UseSnapSheetExample> with SingleTi
             _moveAmount = moveAmount;
           });
         },
-        snapSheetController: _controller,
+        snappingSheetController: _controller,
         snapPositions: const [
           SnapPosition(positionPixel: 0.0, snappingCurve: Curves.elasticOut, snappingDuration: Duration(milliseconds: 750)),
           SnapPosition(positionFactor: 0.4),
