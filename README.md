@@ -1,6 +1,6 @@
 # Snapping sheet
 
-A package that provides a highly customizable bottom sheet widget that snaps to different vertical positions
+A package that provides a highly customizable sheet widget that snaps to different vertical positions
 
 <table>
     <tr>
@@ -31,7 +31,7 @@ You can add the snapping sheet to you app by adding the following code
         Widget build(BuildContext context) {
             return Scaffold(
             body: SnappingSheet(
-                    sheet: Container(
+                    sheetBelow: Container(
                         color: Colors.red
                     ),
                     grabbing: Container(
@@ -64,3 +64,21 @@ witch takes in a list of `SnapPosition`.
         ],
     )
 ```
+
+## Other options
+
+|Name                       |Description                            |
+|---------------------------|---------------------------------------|
+|child                      |The widget behind the sheet.|
+|sheetBelow                 |The widget that is the remaining space between the bottom to the bottom of the grabbing widget.|
+|sheetAbove                 |The widget that is the remaining space between the top to the top of the grabbing widget. |
+|grabbing                   |The widget fixed between the sheetBelow and sheetAbove.|
+|grabbingHeight             |The height of the grabbing widget.|
+|sheetBelowMargin           |The margin for the sheetBelow widget. Can be negative values.|
+|sheetAboveMargin           |The margin for the sheetAbove widget. Can be negative values.|
+|snapPositions              |The different snap positions for the sheet|
+|initSnapPosition           |The init snap position, do not need to exist in the napPositions list|
+|snapSheetController        |Control the sheet and get current snap position|
+|onMove                     |Callback when the sheet is moving.|
+|onSnapBegin                |Callback when a snap begins, happens when the user stops dragging the sheet.|
+|onSnapEnd                  |Callback when a snap is completed.|
