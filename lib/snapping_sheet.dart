@@ -56,7 +56,8 @@ class SnappingSheet extends StatefulWidget {
   final List<SnapPosition> snapPositions;
 
   /// The init snap position. If this position is not included in [snapPositions]
-  /// it can not be snapped back after the [sheetBelow] is leaving this position.
+  /// it can not be snapped back after the sheet is leaving this position. If [initSnapPosition]
+  /// is null the init snap position is taken from the first snapPosition from [snapPositions]
   final SnapPosition initSnapPosition;
 
   /// The margin of the [sheetAbove]. Values in the [EdgeInsets] can be negative.
@@ -268,15 +269,17 @@ class _SnappingSheetState extends State<SnappingSheet>
         _buildBackground(),
 
         // The sheet below
-        Positioned(
-          top: widget.sheetAboveMargin.top,
-          bottom: _currentDragAmount +
-              widget.sheetAboveMargin.bottom +
-              widget.grabbingHeight,
-          left: widget.sheetAboveMargin.left,
-          right: widget.sheetAboveMargin.right,
-          child: widget.sheetAbove,
-        ),
+        widget.sheetAbove != null
+            ? Positioned(
+                top: widget.sheetAboveMargin.top,
+                bottom: _currentDragAmount +
+                    widget.sheetAboveMargin.bottom +
+                    widget.grabbingHeight,
+                left: widget.sheetAboveMargin.left,
+                right: widget.sheetAboveMargin.right,
+                child: widget.sheetAbove,
+              )
+            : SizedBox(),
 
         // The grabing area
         Positioned(
@@ -306,15 +309,17 @@ class _SnappingSheetState extends State<SnappingSheet>
         ),
 
         // The sheet below
-        Positioned(
-          top: constraints.maxHeight -
-              _currentDragAmount +
-              widget.sheetBelowMargin.top,
-          left: widget.sheetBelowMargin.left,
-          right: widget.sheetBelowMargin.right,
-          bottom: widget.sheetBelowMargin.bottom,
-          child: widget.sheetBelow,
-        )
+        widget.sheetBelow != null
+            ? Positioned(
+                top: constraints.maxHeight -
+                    _currentDragAmount +
+                    widget.sheetBelowMargin.top,
+                left: widget.sheetBelowMargin.left,
+                right: widget.sheetBelowMargin.right,
+                bottom: widget.sheetBelowMargin.bottom,
+                child: widget.sheetBelow,
+              )
+            : SizedBox(),
       ]);
     });
   }
