@@ -48,10 +48,10 @@ class SnappingSheet extends StatefulWidget {
 
   /// The widget for grabing the [sheet]. It placed above the [sheet]
   /// widget.
-  final Widget grabing;
+  final Widget grabbing;
 
   /// The height of the grabing widget
-  final double grabingHeight;
+  final double grabbingHeight;
 
   /// The different snapping positions for the [sheet]
   final List<SnapPosition> snapPositions;
@@ -78,8 +78,8 @@ class SnappingSheet extends StatefulWidget {
     Key key,
     @required this.sheet,
     this.child,
-    this.grabing,
-    this.grabingHeight = 75.0,
+    this.grabbing,
+    this.grabbingHeight = 75.0,
     this.snapPositions = const [
       SnapPosition(positionPixel: 0.0),
       SnapPosition(positionFactor: 0.5),
@@ -237,7 +237,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   /// Getting the snap position in pixels
   double _getSnapPositionInPixels(SnapPosition snapPosition) {
     return snapPosition._getPositionInPixels(
-        _currentConstraints.maxHeight - widget.grabingHeight);
+        _currentConstraints.maxHeight - widget.grabbingHeight);
   }
 
   /// Builds the widget for the remaning space
@@ -250,7 +250,7 @@ class _SnappingSheetState extends State<SnappingSheet>
         top: widget.remainingMargin.top,
         bottom: _currentDragAmount +
             widget.remainingMargin.bottom +
-            widget.grabingHeight,
+            widget.grabbingHeight,
         left: widget.remainingMargin.left,
         right: widget.remainingMargin.right,
         child: widget.remaining);
@@ -286,10 +286,10 @@ class _SnappingSheetState extends State<SnappingSheet>
         Positioned(
           left: 0,
           right: 0,
-          height: widget.grabingHeight,
+          height: widget.grabbingHeight,
           bottom: _currentDragAmount,
           child: GestureDetector(
-            child: widget.grabing,
+            child: widget.grabbing,
             onVerticalDragEnd: (_) {
               _animateToClosestStop();
             },

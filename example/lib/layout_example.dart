@@ -11,7 +11,7 @@ class LayoutSnapSheetExample extends StatelessWidget {
       body: SnappingSheet(
         child: Placeholder(color: Colors.red,),
         sheet: Placeholder(color: Colors.blue,),
-        grabing: Container(
+        grabbing: Container(
           color: Colors.white.withOpacity(0.0),
           child: Placeholder(color: Colors.green,),
         ),

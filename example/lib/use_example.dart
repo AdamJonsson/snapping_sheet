@@ -79,8 +79,8 @@ class _UseSnapSheetExampleState extends State<UseSnapSheetExample> with SingleTi
             ),
           ],
         ),
-        grabingHeight: MediaQuery.of(context).padding.bottom + 50,
-        grabing: GrabSection(),
+        grabbingHeight: MediaQuery.of(context).padding.bottom + 50,
+        grabbing: GrabSection(),
         sheet: SheetContent(),
       ),
     );
