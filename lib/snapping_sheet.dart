@@ -35,48 +35,50 @@ class SnapPosition {
 
 /// A sheet that snaps to different positions
 class SnappingSheet extends StatefulWidget {
-  /// The widget behind the [sheet] widget. It has a constant height
+  /// The widget behind the [sheetBelow] widget. It has a constant height
   /// and do not change when the sheet is draged up or down.
   final Widget child;
 
-  /// The sheet of
-  final Widget sheet;
+  /// The sheet that is placed below the [grabbing] widget
+  final Widget sheetBelow;
 
-  /// The remaining space between the the top of the [sheet] and the
-  /// rest of the space above. It resized every time the sheet is draged
-  final Widget remaining;
+  /// The sheet that is placed above the [grabbing] widget
+  final Widget sheetAbove;
 
-  /// The widget for grabing the [sheet]. It placed above the [sheet]
-  /// widget.
+  /// The widget for grabing the [sheetBelow] or [sheetAbove]. It placed between the [sheetBelow] and the
+  /// [sheetAbove] widget.
   final Widget grabbing;
 
   /// The height of the grabing widget
   final double grabbingHeight;
 
-  /// The different snapping positions for the [sheet]
+  /// The different snapping positions for the [sheetBelow]
   final List<SnapPosition> snapPositions;
 
   /// The init snap position. If this position is not included in [snapPositions]
-  /// it can not be snapped back after the [sheet] is leaving this position.
+  /// it can not be snapped back after the [sheetBelow] is leaving this position.
   final SnapPosition initSnapPosition;
 
-  /// The margin of the remaining space. Can be negative.
-  final EdgeInsets remainingMargin;
+  /// The margin of the [sheetAbove]. Values in the [EdgeInsets] can be negative.
+  final EdgeInsets sheetAboveMargin;
+
+  /// The margin of the [sheetAbove]. Values in the [EdgeInsets] can be negative.
+  final EdgeInsets sheetBelowMargin;
 
   /// The controller for the [SnappingSheet]
   final SnapSheetController snapSheetController;
 
-  /// Is called when the [sheet] is being moved
+  /// Is called when the [sheetBelow] is being moved
   final Function(double pixelPosition) onMove;
 
   final VoidCallback onSnapBegin;
 
-  /// Is called when the [sheet] is snappet to one of the [snapPositions]
+  /// Is called when the [sheetBelow] is snappet to one of the [snapPositions]
   final VoidCallback onSnapEnd;
 
   const SnappingSheet({
     Key key,
-    @required this.sheet,
+    @required this.sheetBelow,
     this.child,
     this.grabbing,
     this.grabbingHeight = 75.0,
@@ -86,8 +88,9 @@ class SnappingSheet extends StatefulWidget {
       SnapPosition(positionFactor: 0.9),
     ],
     this.initSnapPosition,
-    this.remaining,
-    this.remainingMargin = const EdgeInsets.all(0.0),
+    this.sheetAbove,
+    this.sheetBelowMargin = const EdgeInsets.all(0.0),
+    this.sheetAboveMargin = const EdgeInsets.all(0.0),
     this.snapSheetController,
     this.onMove,
     this.onSnapBegin,
@@ -164,16 +167,16 @@ class _SnappingSheetState extends State<SnappingSheet>
     SnapPosition closestSnapPosition;
 
     // Check if the user is dragging downwards or upwards
-    final isDraggingUpwards = _currentDragAmount > _lastSnappingLocation._getPositionInPixels(_currentConstraints.maxHeight);
-    print('Is dragging upwards: ' + isDraggingUpwards.toString());
-    print('Test');
+    final isDraggingUpwards = _currentDragAmount >
+        _lastSnappingLocation
+            ._getPositionInPixels(_currentConstraints.maxHeight);
 
     // Find the closest snapping position
     for (var snapPosition in widget.snapPositions) {
+      final snapPositionPixels =
+          snapPosition._getPositionInPixels(_currentConstraints.maxHeight);
 
-      final snapPositionPixels = snapPosition._getPositionInPixels(_currentConstraints.maxHeight);
-
-      if(snapPosition != _lastSnappingLocation) {
+      if (snapPosition != _lastSnappingLocation) {
         // Ignore snap positions below if dragging upwards
         if (isDraggingUpwards && snapPositionPixels < _currentDragAmount) {
           continue;
@@ -192,7 +195,8 @@ class _SnappingSheetState extends State<SnappingSheet>
       var snappingFactor = snapPosition == _lastSnappingLocation ? 0.1 : 1;
 
       // Check if this snapPosition has the minimum distance
-      if (minDistance == null || minDistance > snappingDistance / snappingFactor) {
+      if (minDistance == null ||
+          minDistance > snappingDistance / snappingFactor) {
         minDistance = snappingDistance / snappingFactor;
         closestSnapPosition = snapPosition;
       }
@@ -240,22 +244,6 @@ class _SnappingSheetState extends State<SnappingSheet>
         _currentConstraints.maxHeight - widget.grabbingHeight);
   }
 
-  /// Builds the widget for the remaning space
-  Widget _buildRemaining() {
-    if (widget.remaining == null) {
-      return SizedBox();
-    }
-
-    return Positioned(
-        top: widget.remainingMargin.top,
-        bottom: _currentDragAmount +
-            widget.remainingMargin.bottom +
-            widget.grabbingHeight,
-        left: widget.remainingMargin.left,
-        right: widget.remainingMargin.right,
-        child: widget.remaining);
-  }
-
   /// Builds the widget located behind the sheet
   Widget _buildBackground() {
     if (widget.child == null) {
@@ -279,8 +267,16 @@ class _SnappingSheetState extends State<SnappingSheet>
         // The widget behind the sheet
         _buildBackground(),
 
-        // The widget of the remaining space
-        _buildRemaining(),
+        // The sheet below
+        Positioned(
+          top: widget.sheetAboveMargin.top,
+          bottom: _currentDragAmount +
+              widget.sheetAboveMargin.bottom +
+              widget.grabbingHeight,
+          left: widget.sheetAboveMargin.left,
+          right: widget.sheetAboveMargin.right,
+          child: widget.sheetAbove,
+        ),
 
         // The grabing area
         Positioned(
@@ -309,13 +305,16 @@ class _SnappingSheetState extends State<SnappingSheet>
           ),
         ),
 
-        // The sheet
+        // The sheet below
         Positioned(
-            top: constraints.maxHeight - _currentDragAmount,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: widget.sheet)
+          top: constraints.maxHeight -
+              _currentDragAmount +
+              widget.sheetBelowMargin.top,
+          left: widget.sheetBelowMargin.left,
+          right: widget.sheetBelowMargin.right,
+          bottom: widget.sheetBelowMargin.bottom,
+          child: widget.sheetBelow,
+        )
       ]);
     });
   }

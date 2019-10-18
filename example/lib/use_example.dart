@@ -31,7 +31,7 @@ class _UseSnapSheetExampleState extends State<UseSnapSheetExample> with SingleTi
         title: Text('Use example'),
       ),
       body: SnappingSheet(
-        remaining: Padding(
+        sheetAbove: Padding(
           padding: EdgeInsets.only(bottom: 20.0),
           child: Align(
             alignment: Alignment(0.90, 1.0),
@@ -81,7 +81,7 @@ class _UseSnapSheetExampleState extends State<UseSnapSheetExample> with SingleTi
         ),
         grabbingHeight: MediaQuery.of(context).padding.bottom + 50,
         grabbing: GrabSection(),
-        sheet: SheetContent(),
+        sheetBelow: SheetContent(),
       ),
     );
   }
