@@ -77,6 +77,13 @@ class SnappingSheet extends StatefulWidget {
   /// Is called when the [sheetBelow] is snappet to one of the [snapPositions]
   final VoidCallback onSnapEnd;
 
+  /// If the [sheetBelow] should listen for drag events.
+  /// Should be false if the [sheetBelow] have scrollable content.
+  final bool sheetBelowDraggable;
+
+  /// If the [sheetAbove] should listen for drag events.
+  /// Should be false if the [sheetAbove] have scrollable content.
+  final bool sheetAboveDraggable;
   const SnappingSheet({
     Key key,
     @required this.sheetBelow,
@@ -96,14 +103,23 @@ class SnappingSheet extends StatefulWidget {
     this.onMove,
     this.onSnapBegin,
     this.onSnapEnd,
+    this.sheetAboveDraggable = false,
+    this.sheetBelowDraggable = false,
   }) : super(key: key);
 
   @override
   _SnappingSheetState createState() => _SnappingSheetState();
 }
 
+enum SnappingSheetListenerType {
+  draggable,
+  sheetAbove,
+  sheetBelow
+}
+
 class _SnappingSheetState extends State<SnappingSheet>
     with SingleTickerProviderStateMixin {
+  
   /// How heigh up the sheet is dragged in pixels
   double _currentDragAmount;
 
@@ -256,6 +272,60 @@ class _SnappingSheetState extends State<SnappingSheet>
     );
   }
 
+  bool _isDraggable(listenerType) {
+    switch (listenerType) {
+      case SnappingSheetListenerType.sheetAbove:
+        if(widget.sheetAboveDraggable) {
+          return true;
+        }
+        return false;
+      case SnappingSheetListenerType.sheetBelow:
+        if(widget.sheetBelowDraggable) {
+          return true;
+        }
+        return false;
+      default:
+        return false;
+    }
+  }
+
+  Widget _wrapDraggable(bool ignoreGestureDetection, Widget child, SnappingSheetListenerType listenerType)  {
+
+    if (ignoreGestureDetection) {
+      return child;
+    }
+
+    return Listener(
+      behavior: HitTestBehavior.translucent,
+      child: child,
+      onPointerUp: (_) {
+        if(!_isDraggable(listenerType)) {
+          return;
+        }
+        _animateToClosestStop();
+      },
+      onPointerDown: (_) {
+        if(!_isDraggable(listenerType)) {
+          return;
+        }
+        // Stop the current snapping animation so the user is
+        // able to drag again.
+        _snappingAnimationController.stop();
+      },
+      onPointerMove: (dragEvent) {
+        if(!_isDraggable(listenerType)) {
+          return;
+        }
+        setState(() {
+          _currentDragAmount -= dragEvent.delta.dy;
+        });
+        if (widget.onMove != null) {
+          widget.onMove(_currentDragAmount);
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
@@ -277,7 +347,7 @@ class _SnappingSheetState extends State<SnappingSheet>
                     widget.grabbingHeight,
                 left: widget.sheetAboveMargin.left,
                 right: widget.sheetAboveMargin.right,
-                child: widget.sheetAbove,
+                child: _wrapDraggable(false, widget.sheetAbove, SnappingSheetListenerType.sheetAbove),
               )
             : SizedBox(),
 
@@ -287,25 +357,7 @@ class _SnappingSheetState extends State<SnappingSheet>
           right: 0,
           height: widget.grabbingHeight,
           bottom: _currentDragAmount,
-          child: GestureDetector(
-            child: widget.grabbing,
-            onVerticalDragEnd: (_) {
-              _animateToClosestStop();
-            },
-            onVerticalDragStart: (_) {
-              // Stop the current snapping animation so the user is
-              // able to drag again.
-              _snappingAnimationController.stop();
-            },
-            onVerticalDragUpdate: (dragEvent) {
-              setState(() {
-                _currentDragAmount -= dragEvent.delta.dy;
-              });
-              if (widget.onMove != null) {
-                widget.onMove(_currentDragAmount);
-              }
-            },
-          ),
+          child: _wrapDraggable(false, widget.grabbing, SnappingSheetListenerType.draggable)
         ),
 
         // The sheet below
@@ -317,7 +369,7 @@ class _SnappingSheetState extends State<SnappingSheet>
                 left: widget.sheetBelowMargin.left,
                 right: widget.sheetBelowMargin.right,
                 bottom: widget.sheetBelowMargin.bottom,
-                child: widget.sheetBelow,
+                child: _wrapDraggable(false, widget.sheetBelow, SnappingSheetListenerType.sheetBelow),
               )
             : SizedBox(),
       ]);

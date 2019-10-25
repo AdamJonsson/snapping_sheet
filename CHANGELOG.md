@@ -1,5 +1,6 @@
-## [1.0.1] - 25/10/2019
+## [1.1.0] - 25/10/2019
 
+* Added the option to make sheetBelow and sheetAbove widget draggable.
 * Update the readme
   
 ## [1.0.0] - 18/10/2019
