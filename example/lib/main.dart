@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        '/UseExample': (context) => UseSnapSheetExample(),
-        '/LayoutExample': (context) => LayoutSnapSheetExample(),
+        '/ListViewExample': (context) => UseSnapSheetExample(),
+        '/PlaceholderExample': (context) => LayoutSnapSheetExample(),
       },
       home: Scaffold(
         body: Builder(
@@ -27,15 +27,15 @@ class MyApp extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   RaisedButton(
-                    child: Text('Use example'),
+                    child: Text('Listview example'),
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/UseExample');
+                      Navigator.of(context).pushNamed('/ListViewExample');
                     },
                   ),
                   RaisedButton(
-                    child: Text('Layout example'),
+                    child: Text('Placeholder example'),
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/LayoutExample');
+                      Navigator.of(context).pushNamed('/PlaceholderExample');
                     },
                   ),
                 ],

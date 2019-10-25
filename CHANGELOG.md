@@ -1,4 +1,8 @@
-## [1.0.0] - 07/10/2019
+## [1.0.1] - 25/10/2019
+
+* Update the readme
+  
+## [1.0.0] - 18/10/2019
 
 * Breaking changes, renamed parameters such as
   * sheet -> sheetBelow

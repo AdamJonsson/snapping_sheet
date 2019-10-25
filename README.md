@@ -4,8 +4,8 @@ A package that provides a highly customizable sheet widget that snaps to differe
 
 <table>
     <tr>
-        <td>Using only placeholders</td>
-        <td>ListView</td>
+        <td>Example using only placeholders</td>
+        <td>Example using ListView</td>
     <tr>
     <tr>
         <td>
@@ -79,8 +79,8 @@ witch takes in a list of `SnapPosition`.
 |sheetBelowMargin           |The margin for the sheetBelow widget. Can be negative values.|
 |sheetAboveMargin           |The margin for the sheetAbove widget. Can be negative values.|
 |snapPositions              |The different snap positions for the sheet|
-|initSnapPosition           |The init snap position, do not need to exist in the napPositions list|
-|snappingSheetController        |Control the sheet and get current snap position|
+|initSnapPosition           |The init snap position, do not need to exist in the snapPositions list|
+|snappingSheetController     |Control the sheet and get current snap position|
 |onMove                     |Callback when the sheet is moving.|
 |onSnapBegin                |Callback when a snap begins, happens when the user stops dragging the sheet.|
 |onSnapEnd                  |Callback when a snap is completed.|
