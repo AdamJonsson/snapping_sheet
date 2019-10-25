@@ -285,7 +285,7 @@ class _SnappingSheetState extends State<SnappingSheet>
         }
         return false;
       default:
-        return false;
+        return true;
     }
   }
 
