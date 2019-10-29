@@ -206,7 +206,7 @@ class _SnappingSheetState extends State<SnappingSheet>
       }
 
       // Getting the distance to the current snapPosition
-      var snappingDistance = (snapPositionPixels - _currentDragAmount).abs();
+      var snappingDistance = (snapPositionPixels - _currentDragAmount - widget.grabbingHeight / 2).abs();
 
       // It should be hard to snap to the last snapping location.
       var snappingFactor = snapPosition == _lastSnappingLocation ? 0.1 : 1;
