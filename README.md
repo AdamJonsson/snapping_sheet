@@ -4,15 +4,19 @@ A package that provides a highly customizable sheet widget that snaps to differe
 
 <table>
     <tr>
-        <td>Example using only placeholders</td>
-        <td>Example using ListView</td>
+        <td>Using a ListView in <br> sheetBelow</td>
+        <td>Example using only <br> placeholders</td>
+        <td>Using a ListView in <br> sheetAbove</td>
     <tr>
     <tr>
         <td>
-            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/layoutExample.gif" width="275">
+            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/useExample.gif" width="150">
         </td>
         <td>
-            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/useExample.gif" width="275">
+            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/layoutExample.gif" width="150">
+        </td>
+        <td>
+            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/topsheetExample.gif" width="150">
         </td>
     </tr>
 </table>
@@ -84,3 +88,4 @@ witch takes in a list of `SnapPosition`.
 |onMove                     |Callback when the sheet is moving.|
 |onSnapBegin                |Callback when a snap begins, happens when the user stops dragging the sheet.|
 |onSnapEnd                  |Callback when a snap is completed.|
+|lockOverflowDrag           |Prevents the grabbing sheet to be dragged above the highest snapPosition or below the lowest snapPosition.|

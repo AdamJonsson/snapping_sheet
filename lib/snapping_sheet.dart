@@ -60,6 +60,10 @@ class SnappingSheet extends StatefulWidget {
   /// is null the init snap position is taken from the first snapPosition from [snapPositions]
   final SnapPosition initSnapPosition;
 
+  /// If true, the grabbing widget can not be draget below the lowest [snapPositions]
+  /// or over the heightest [snapPositions].
+  final bool lockOverflowDrag;
+
   /// The margin of the [sheetAbove]. Values in the [EdgeInsets] can be negative.
   final EdgeInsets sheetAboveMargin;
 
@@ -96,6 +100,7 @@ class SnappingSheet extends StatefulWidget {
       SnapPosition(positionFactor: 0.9),
     ],
     this.initSnapPosition,
+    this.lockOverflowDrag = false,
     this.sheetAbove,
     this.sheetBelowMargin = const EdgeInsets.all(0.0),
     this.sheetAboveMargin = const EdgeInsets.all(0.0),
@@ -175,6 +180,12 @@ class _SnappingSheetState extends State<SnappingSheet>
   void didUpdateWidget(SnappingSheet oldWidget) {
     super.didUpdateWidget(oldWidget);
     widget.snappingSheetController?.snapPositions = widget.snapPositions;
+  }
+
+  @override
+  void dispose() {
+    _snappingAnimationController.dispose();
+    super.dispose();
   }
 
   /// Get the closest snapping location
@@ -316,6 +327,16 @@ class _SnappingSheetState extends State<SnappingSheet>
         if(!_isDraggable(listenerType)) {
           return;
         }
+        if(widget.lockOverflowDrag) {
+          var newDragAmount = _currentDragAmount - dragEvent.delta.dy;
+          if(newDragAmount < widget.snapPositions.first._getPositionInPixels(_currentConstraints.maxHeight)) {
+            return;
+          }
+
+          if(newDragAmount + widget.grabbingHeight > widget.snapPositions.last._getPositionInPixels(_currentConstraints.maxHeight)) {
+            return;
+          }
+        }
         setState(() {
           _currentDragAmount -= dragEvent.delta.dy;
         });
@@ -338,6 +359,15 @@ class _SnappingSheetState extends State<SnappingSheet>
         // The widget behind the sheet
         _buildBackground(),
 
+        // The grabing area
+        Positioned(
+          left: 0,
+          right: 0,
+          height: widget.grabbingHeight,
+          bottom: _currentDragAmount,
+          child: _wrapDraggable(false, widget.grabbing, SnappingSheetListenerType.draggable)
+        ),
+
         // The sheet below
         widget.sheetAbove != null
             ? Positioned(
@@ -351,14 +381,6 @@ class _SnappingSheetState extends State<SnappingSheet>
               )
             : SizedBox(),
 
-        // The grabing area
-        Positioned(
-          left: 0,
-          right: 0,
-          height: widget.grabbingHeight,
-          bottom: _currentDragAmount,
-          child: _wrapDraggable(false, widget.grabbing, SnappingSheetListenerType.draggable)
-        ),
 
         // The sheet below
         widget.sheetBelow != null

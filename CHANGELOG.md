@@ -1,6 +1,8 @@
-## [1.1.0] - 25/10/2019
+## [1.1.0] - 29/10/2019
 
 * Added the option to make sheetBelow and sheetAbove widget draggable.
+* Added the option to lock overflow drag.
+* Added new example of using a top sheet.
 * Fix minor bugs with the snapping system.
   
 ## [1.0.0] - 18/10/2019

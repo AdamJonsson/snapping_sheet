@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 
-class UseSnapSheetExample extends StatefulWidget {
+class TopSnapSheetExample extends StatefulWidget {
   @override
-  _UseSnapSheetExampleState createState() => _UseSnapSheetExampleState();
+  _TopSnapSheetExampleState createState() => _TopSnapSheetExampleState();
 }
 
-class _UseSnapSheetExampleState extends State<UseSnapSheetExample> with SingleTickerProviderStateMixin{
+class _TopSnapSheetExampleState extends State<TopSnapSheetExample> with SingleTickerProviderStateMixin{
   var _controller = SnappingSheetController();
   AnimationController _arrowIconAnimationController;
   Animation<double> _arrowIconAnimation;
@@ -28,13 +28,13 @@ class _UseSnapSheetExampleState extends State<UseSnapSheetExample> with SingleTi
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Use example'),
+        title: Text('ListView example'),
       ),
       body: SnappingSheet(
-        sheetAbove: Padding(
-          padding: EdgeInsets.only(bottom: 20.0),
+        sheetBelow: Padding(
+          padding: EdgeInsets.only(top: 20.0),
           child: Align(
-            alignment: Alignment(0.90, 1.0),
+            alignment: Alignment(0.90, -1.0),
             child: FloatingActionButton(
               onPressed: () {
                 if(_controller.snapPositions.last != _controller.currentSnapPosition) {
@@ -66,10 +66,11 @@ class _UseSnapSheetExampleState extends State<UseSnapSheetExample> with SingleTi
         },
         snappingSheetController: _controller,
         snapPositions: const [
-          SnapPosition(positionPixel: 0.0, snappingCurve: Curves.elasticOut, snappingDuration: Duration(milliseconds: 750)),
-          SnapPosition(positionFactor: 0.4),
-          SnapPosition(positionFactor: 0.8),
+          SnapPosition(positionFactor: 0.2, snappingCurve: Curves.elasticOut, snappingDuration: Duration(milliseconds: 750)),
+          SnapPosition(positionFactor: 0.6),
+          SnapPosition(positionFactor: 1.0),
         ],
+        initSnapPosition: SnapPosition(positionFactor: 1.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -81,7 +82,7 @@ class _UseSnapSheetExampleState extends State<UseSnapSheetExample> with SingleTi
         ),
         grabbingHeight: MediaQuery.of(context).padding.bottom + 50,
         grabbing: GrabSection(),
-        sheetBelow: SheetContent(),
+        sheetAbove: SheetContent(),
       ),
     );
   }
@@ -124,26 +125,26 @@ class GrabSection extends StatelessWidget {
           color: Colors.black.withOpacity(0.2),
         )],
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0),
-          topRight: Radius.circular(30.0),
+          bottomLeft: Radius.circular(30.0),
+          bottomRight: Radius.circular(30.0),
         ),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
+            height: 2.0,
+            margin: EdgeInsets.only(left: 20, right: 20),
+            color: Colors.grey[300],
+          ),
+          Container(
             width: 100.0,
             height: 10.0,
-            margin: EdgeInsets.only(top: 15.0),
+            margin: EdgeInsets.only(bottom: 15.0),
             decoration: BoxDecoration(
               color: Colors.grey[300],
               borderRadius: BorderRadius.all(Radius.circular(5.0))
             ),
-          ),
-          Container(
-            height: 2.0,
-            margin: EdgeInsets.only(left: 20, right: 20),
-            color: Colors.grey[300],
           ),
         ],
       ),

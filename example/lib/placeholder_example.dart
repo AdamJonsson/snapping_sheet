@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 
-class LayoutSnapSheetExample extends StatelessWidget {
+class PlaceholderSnapSheetExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Layout example'),
+        title: Text('Placeholder example'),
       ),
       body: SnappingSheet(
         child: Placeholder(color: Colors.red,),

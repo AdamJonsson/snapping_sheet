@@ -1,5 +1,6 @@
-import 'package:example/layout_example.dart';
-import 'package:example/use_example.dart';
+import 'package:example/placeholder_example.dart';
+import 'package:example/listview_example.dart';
+import 'package:example/topsheet_example.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -14,8 +15,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        '/ListViewExample': (context) => UseSnapSheetExample(),
-        '/PlaceholderExample': (context) => LayoutSnapSheetExample(),
+        '/ListViewExample': (context) => ListViewSnapSheetExample(),
+        '/PlaceholderExample': (context) => PlaceholderSnapSheetExample(),
+        '/TopSnapSheetExample': (context) => TopSnapSheetExample(),
       },
       home: Scaffold(
         body: Builder(
@@ -36,6 +38,12 @@ class MyApp extends StatelessWidget {
                     child: Text('Placeholder example'),
                     onPressed: () {
                       Navigator.of(context).pushNamed('/PlaceholderExample');
+                    },
+                  ),
+                  RaisedButton(
+                    child: Text('Top sheet example'),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/TopSnapSheetExample');
                     },
                   ),
                 ],
