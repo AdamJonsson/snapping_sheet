@@ -10,13 +10,13 @@ A package that provides a highly customizable sheet widget that snaps to differe
     <tr>
     <tr>
         <td>
-            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/useExample.gif" width="150">
+            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/useExample.gif" width="160">
         </td>
         <td>
-            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/layoutExample.gif" width="150">
+            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/layoutExample.gif" width="160">
         </td>
         <td>
-            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/topsheetExample.gif" width="150">
+            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/topsheetExample.gif" width="160">
         </td>
     </tr>
 </table>
