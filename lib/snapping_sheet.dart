@@ -332,9 +332,13 @@ class _SnappingSheetState extends State<SnappingSheet>
             return;
           }
 
-          if (newDragAmount + widget.grabbingHeight >
-              widget.snapPositions.last
-                  ._getPositionInPixels(_currentConstraints.maxHeight)) {
+          var lastSnapPositionInPixels = widget.snapPositions.last
+              ._getPositionInPixels(_currentConstraints.maxHeight);
+          if (newDragAmount +
+                  widget.grabbingHeight *
+                      lastSnapPositionInPixels /
+                      _currentConstraints.maxHeight >
+              lastSnapPositionInPixels) {
             return;
           }
         }

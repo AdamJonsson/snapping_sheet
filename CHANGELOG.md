@@ -1,3 +1,7 @@
+## [1.1.1] - 12/11/2019
+
+* Fix a dragging bug where the grabbing widget is stuck when lockOverflowDrag was set to true
+
 ## [1.1.0] - 29/10/2019
 
 * Added the option to make sheetBelow and sheetAbove widget draggable.
