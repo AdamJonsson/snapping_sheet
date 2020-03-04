@@ -1,6 +1,6 @@
 ## [1.1.2] - 12/11/2019
 
-* Fix error when sheet dragged after last or first [snappingPosition]
+* Fix error when sheet dragged after last or first [snappingPosition]. Thank you [N1ght-Fury](https://github.com/N1ght-Fury) for brining light to the issue.
   
 ## [1.1.1] - 12/11/2019
 
