@@ -190,30 +190,36 @@ class _SnappingSheetState extends State<SnappingSheet>
     SnapPosition closestSnapPosition;
 
     // Check if the user is dragging downwards or upwards
-    final isDraggingUpwards = _currentDragAmount >
-        _lastSnappingLocation
-            ._getPositionInPixels(_currentConstraints.maxHeight);
+    final isDraggingUpwards = _currentDragAmount > _getSnapPositionInPixels(_lastSnappingLocation);
 
     // Find the closest snapping position
     for (var snapPosition in widget.snapPositions) {
-      final snapPositionPixels =
-          snapPosition._getPositionInPixels(_currentConstraints.maxHeight);
+      final snapPositionPixels = _getSnapPositionInPixels(snapPosition);
 
       if (snapPosition != _lastSnappingLocation) {
+        bool dragOverflowLastSnapPosition = (
+          snapPosition == widget.snapPositions.last && 
+          _currentDragAmount > _getSnapPositionInPixels(widget.snapPositions.last)
+        );
+        bool dragOverflowFirstSnapPosition = (
+          snapPosition == widget.snapPositions.first && 
+          _currentDragAmount < _getSnapPositionInPixels(widget.snapPositions.first)
+        );
+
         // Ignore snap positions below if dragging upwards
-        if (isDraggingUpwards && snapPositionPixels < _currentDragAmount) {
+        if (isDraggingUpwards && snapPositionPixels < _currentDragAmount && !dragOverflowLastSnapPosition) {
           continue;
         }
 
         // Ignore snap positions above if dragging downwards
-        if (!isDraggingUpwards && snapPositionPixels > _currentDragAmount) {
+        if (!isDraggingUpwards && snapPositionPixels > _currentDragAmount && !dragOverflowFirstSnapPosition) {
           continue;
         }
       }
 
       // Getting the distance to the current snapPosition
       var snappingDistance =
-          (snapPositionPixels - _currentDragAmount - widget.grabbingHeight / 2)
+          (snapPositionPixels - _currentDragAmount)
               .abs();
 
       // It should be hard to snap to the last snapping location.

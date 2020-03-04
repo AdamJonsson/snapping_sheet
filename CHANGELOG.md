@@ -1,3 +1,7 @@
+## [1.1.2] - 12/11/2019
+
+* Fix error when sheet dragged after last or first [snappingPosition]
+  
 ## [1.1.1] - 12/11/2019
 
 * Fix a dragging bug where the grabbing widget is stuck when lockOverflowDrag was set to true
