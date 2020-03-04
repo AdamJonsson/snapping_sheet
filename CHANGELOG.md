@@ -1,6 +1,7 @@
 ## [1.1.2] - 12/11/2019
 
-* Fix error when sheet dragged after last or first [snappingPosition]. Thank you [N1ght-Fury](https://github.com/N1ght-Fury) for brining light to the issue.
+* Fix error when sheet dragged after last or first [snappingPosition]. Thank you [N1ght-Fury](https://github.com/N1ght-Fury)
+* Remove required syntax for [sheetBlow] parameter. Thank you [Nico04](https://github.com/Nico04)
   
 ## [1.1.1] - 12/11/2019
 

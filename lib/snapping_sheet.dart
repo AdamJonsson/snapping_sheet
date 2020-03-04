@@ -90,7 +90,7 @@ class SnappingSheet extends StatefulWidget {
   final bool sheetAboveDraggable;
   const SnappingSheet({
     Key key,
-    @required this.sheetBelow,
+    this.sheetBelow,
     this.child,
     this.grabbing,
     this.grabbingHeight = 75.0,
