@@ -25,7 +25,8 @@ class SnappingSheetHeight {
       : _type = SnappingSheetType.manuel,
         expandOnSnapPositionOverflow = false;
 
-  /// Make the sheet height the maximum sheet possible and keep the height fixed
+  /// Make the sheet height the maximum sheet possible and keep the height fixed.
+  /// [expandOnSnapPositionOverflow] default is true
   const SnappingSheetHeight.fixed({this.expandOnSnapPositionOverflow = true})
       : this._type = SnappingSheetType.fixed,
         this.minHeight = null,
@@ -404,22 +405,34 @@ class _SnappingSheetState extends State<SnappingSheet>
 
   double _getSheetHeight(bool isAbove) {
     double fitHeight;
-    SnappingSheetHeight heightData;
+    SnappingSheetHeight heightBehavior;
 
     if (isAbove) {
       fitHeight = _currentConstraints.maxHeight -
           _currentDragAmount -
           widget.grabbingHeight;
-      heightData = widget.sheetAbove.heightBehavior;
+      heightBehavior = widget.sheetAbove.heightBehavior;
     } else {
       fitHeight = _currentDragAmount;
-      heightData = widget.sheetBelow.heightBehavior;
+      heightBehavior = widget.sheetBelow.heightBehavior;
     }
 
-    if (heightData._type == SnappingSheetType.fit) {
-      return fitHeight;
+    switch (heightBehavior._type) {
+      case SnappingSheetType.fit:
+        return fitHeight;
+      case SnappingSheetType.manuel:
+        return max(
+            min(fitHeight, heightBehavior.maxHeight), heightBehavior.minHeight);
+      case SnappingSheetType.fixed:
+        return _getMaximumSheetHeight(
+            isAbove, heightBehavior.expandOnSnapPositionOverflow);
+      default:
+        return fitHeight;
     }
+  }
 
+  double _getMaximumSheetHeight(
+      bool isAbove, bool expandOnSnapPositionOverflow) {
     double maxHeight = 0;
     widget.snapPositions.forEach((snapPosition) {
       double snapHeight = 0;
@@ -435,21 +448,13 @@ class _SnappingSheetState extends State<SnappingSheet>
       }
     });
 
-    if (heightData._type == SnappingSheetType.fixed) {
-      if (isAbove) {
-        return maxHeight -
-            (heightData.expandOnSnapPositionOverflow
-                ? min(_currentDragAmount, 0)
-                : 0);
-      } else {
-        return (heightData.expandOnSnapPositionOverflow
-            ? max(_currentDragAmount, maxHeight)
-            : 0);
-      }
-    }
-
-    if (heightData._type == SnappingSheetType.manuel) {
-      return max(min(fitHeight, heightData.maxHeight), heightData.minHeight);
+    if (isAbove) {
+      return maxHeight -
+          (expandOnSnapPositionOverflow ? min(_currentDragAmount, 0) : 0);
+    } else {
+      return (expandOnSnapPositionOverflow
+          ? max(_currentDragAmount, maxHeight)
+          : maxHeight);
     }
   }
 

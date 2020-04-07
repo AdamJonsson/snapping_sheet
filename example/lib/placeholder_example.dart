@@ -16,7 +16,7 @@ class PlaceholderSnapSheetExample extends StatelessWidget {
               child: Placeholder(
                 color: Colors.blue,
               ),
-              heightBehavior: SnappingSheetHeight.fit()),
+              heightBehavior: SnappingSheetHeight.fixed(expandOnSnapPositionOverflow: false)),
           grabbing: Container(
             color: Colors.white.withOpacity(0.0),
             child: Placeholder(
@@ -27,7 +27,7 @@ class PlaceholderSnapSheetExample extends StatelessWidget {
             child: Placeholder(
               color: Colors.purple,
             ),
-            heightBehavior: SnappingSheetHeight.fit(),
+            heightBehavior: SnappingSheetHeight.fixed(expandOnSnapPositionOverflow: false),
           )),
     );
   }
