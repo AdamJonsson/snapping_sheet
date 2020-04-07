@@ -1,4 +1,10 @@
-## [1.1.2] - 04/04/2020
+## [2.0.0] - 07/05/2020
+* **Breaking change:** The sheetBelow and sheetAbove parameters now takes in a [snappingSheetContent] widget instead of any widget. To fix, just wrap your current widget with a [snappingSheetContent] widget.
+* **Breaking change** Changed so that sheetAboveMargin and sheetBelowMargin must specified in the[snappingSheetContent] widget.
+* **Breaking change** Changed so that sheetBelowDraggable and sheetAboveDraggable must specified in the[snappingSheetContent] widget.
+* Add the option to specify a heigh behavior when the size of the sheet is changing.
+
+## [1.1.2] - 04/03/2020
 
 * Fix error when sheet dragged after last or first [snappingPosition]. Thank you [N1ght-Fury](https://github.com/N1ght-Fury)
 * Remove required syntax for [sheetBlow] parameter. Thank you [Nico04](https://github.com/Nico04)

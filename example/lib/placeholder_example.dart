@@ -9,14 +9,26 @@ class PlaceholderSnapSheetExample extends StatelessWidget {
         title: Text('Placeholder example'),
       ),
       body: SnappingSheet(
-        child: Placeholder(color: Colors.red,),
-        sheetBelow: Placeholder(color: Colors.blue,),
-        grabbing: Container(
-          color: Colors.white.withOpacity(0.0),
-          child: Placeholder(color: Colors.green,),
-        ),
-        sheetAbove: Placeholder(color: Colors.purple,),
-      ),
+          child: Placeholder(
+            color: Colors.red,
+          ),
+          sheetBelow: SnappingSheetContent(
+              child: Placeholder(
+                color: Colors.blue,
+              ),
+              heightBehavior: SnappingSheetHeight.fit()),
+          grabbing: Container(
+            color: Colors.white.withOpacity(0.0),
+            child: Placeholder(
+              color: Colors.green,
+            ),
+          ),
+          sheetAbove: SnappingSheetContent(
+            child: Placeholder(
+              color: Colors.purple,
+            ),
+            heightBehavior: SnappingSheetHeight.fit(),
+          )),
     );
   }
 }

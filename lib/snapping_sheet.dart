@@ -1,6 +1,64 @@
 library snapping_sheet;
 
+import 'dart:math';
 import 'package:flutter/widgets.dart';
+
+enum SnappingSheetType { manuel, fixed, fit }
+
+class SnappingSheetHeight {
+  final SnappingSheetType _type;
+
+  /// When the users drag over the snapp positions that generates the
+  /// maximum height of the sheet, the sheet can either expand its height
+  /// oer keep its height fixed.
+  final bool expandOnSnapPositionOverflow;
+
+  /// The minimum height of the sheet
+  final double minHeight;
+
+  /// the maximum height of the seet
+  final double maxHeight;
+
+  /// Make the sheet height manuel by specifing the minHeight or the maxHeight
+  const SnappingSheetHeight.manuel(
+      {@required this.minHeight, @required this.maxHeight})
+      : _type = SnappingSheetType.manuel,
+        expandOnSnapPositionOverflow = false;
+
+  /// Make the sheet height the maximum sheet possible and keep the height fixed
+  const SnappingSheetHeight.fixed({this.expandOnSnapPositionOverflow = true})
+      : this._type = SnappingSheetType.fixed,
+        this.minHeight = null,
+        this.maxHeight = null;
+
+  /// Make the sheet height fit the avaiable space
+  const SnappingSheetHeight.fit()
+      : this._type = SnappingSheetType.fit,
+        this.expandOnSnapPositionOverflow = false,
+        this.minHeight = null,
+        this.maxHeight = null;
+}
+
+class SnappingSheetContent {
+  /// The content of the sheet;
+  final Widget child;
+
+  /// The margin of the sheet. Values in the [EdgeInsets] can be negative.
+  final EdgeInsets margin;
+
+  /// If the sheet should listen for drag events.
+  /// Should be false if the [child] have scrollable content.
+  final bool draggable;
+
+  /// How the sheet height should behave
+  final SnappingSheetHeight heightBehavior;
+
+  SnappingSheetContent(
+      {this.child,
+      this.margin = const EdgeInsets.all(0.0),
+      this.heightBehavior = const SnappingSheetHeight.fit(),
+      this.draggable = false});
+}
 
 /// A snapping position that tells how a [SnappingSheet] snapps to different positions
 class SnapPosition {
@@ -40,10 +98,10 @@ class SnappingSheet extends StatefulWidget {
   final Widget child;
 
   /// The sheet that is placed below the [grabbing] widget
-  final Widget sheetBelow;
+  final SnappingSheetContent sheetBelow;
 
   /// The sheet that is placed above the [grabbing] widget
-  final Widget sheetAbove;
+  final SnappingSheetContent sheetAbove;
 
   /// The widget for grabing the [sheetBelow] or [sheetAbove]. It placed between the [sheetBelow] and the
   /// [sheetAbove] widget.
@@ -64,12 +122,6 @@ class SnappingSheet extends StatefulWidget {
   /// or over the heightest [snapPositions].
   final bool lockOverflowDrag;
 
-  /// The margin of the [sheetAbove]. Values in the [EdgeInsets] can be negative.
-  final EdgeInsets sheetAboveMargin;
-
-  /// The margin of the [sheetAbove]. Values in the [EdgeInsets] can be negative.
-  final EdgeInsets sheetBelowMargin;
-
   /// The controller for the [SnappingSheet]
   final SnappingSheetController snappingSheetController;
 
@@ -81,17 +133,11 @@ class SnappingSheet extends StatefulWidget {
   /// Is called when the [sheetBelow] is snappet to one of the [snapPositions]
   final VoidCallback onSnapEnd;
 
-  /// If the [sheetBelow] should listen for drag events.
-  /// Should be false if the [sheetBelow] have scrollable content.
-  final bool sheetBelowDraggable;
-
-  /// If the [sheetAbove] should listen for drag events.
-  /// Should be false if the [sheetAbove] have scrollable content.
-  final bool sheetAboveDraggable;
   const SnappingSheet({
     Key key,
-    this.sheetBelow,
     this.child,
+    this.sheetBelow,
+    this.sheetAbove,
     this.grabbing,
     this.grabbingHeight = 75.0,
     this.snapPositions = const [
@@ -101,15 +147,10 @@ class SnappingSheet extends StatefulWidget {
     ],
     this.initSnapPosition,
     this.lockOverflowDrag = false,
-    this.sheetAbove,
-    this.sheetBelowMargin = const EdgeInsets.all(0.0),
-    this.sheetAboveMargin = const EdgeInsets.all(0.0),
     this.snappingSheetController,
     this.onMove,
     this.onSnapBegin,
     this.onSnapEnd,
-    this.sheetAboveDraggable = false,
-    this.sheetBelowDraggable = false,
   }) : super(key: key);
 
   @override
@@ -292,12 +333,12 @@ class _SnappingSheetState extends State<SnappingSheet>
   bool _isDraggable(listenerType) {
     switch (listenerType) {
       case SnappingSheetListenerType.sheetAbove:
-        if (widget.sheetAboveDraggable) {
+        if (widget.sheetAbove.draggable) {
           return true;
         }
         return false;
       case SnappingSheetListenerType.sheetBelow:
-        if (widget.sheetBelowDraggable) {
+        if (widget.sheetBelow.draggable) {
           return true;
         }
         return false;
@@ -361,6 +402,57 @@ class _SnappingSheetState extends State<SnappingSheet>
     );
   }
 
+  double _getSheetHeight(bool isAbove) {
+    double fitHeight;
+    SnappingSheetHeight heightData;
+
+    if (isAbove) {
+      fitHeight = _currentConstraints.maxHeight -
+          _currentDragAmount -
+          widget.grabbingHeight;
+      heightData = widget.sheetAbove.heightBehavior;
+    } else {
+      fitHeight = _currentDragAmount;
+      heightData = widget.sheetBelow.heightBehavior;
+    }
+
+    if (heightData._type == SnappingSheetType.fit) {
+      return fitHeight;
+    }
+
+    double maxHeight = 0;
+    widget.snapPositions.forEach((snapPosition) {
+      double snapHeight = 0;
+      if (isAbove) {
+        snapHeight = _currentConstraints.maxHeight -
+            _getSnapPositionInPixels(snapPosition) -
+            widget.grabbingHeight;
+      } else {
+        snapHeight = _getSnapPositionInPixels(snapPosition);
+      }
+      if (maxHeight < snapHeight) {
+        maxHeight = snapHeight;
+      }
+    });
+
+    if (heightData._type == SnappingSheetType.fixed) {
+      if (isAbove) {
+        return maxHeight -
+            (heightData.expandOnSnapPositionOverflow
+                ? min(_currentDragAmount, 0)
+                : 0);
+      } else {
+        return (heightData.expandOnSnapPositionOverflow
+            ? max(_currentDragAmount, maxHeight)
+            : 0);
+      }
+    }
+
+    if (heightData._type == SnappingSheetType.manuel) {
+      return max(min(fitHeight, heightData.maxHeight), heightData.minHeight);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
@@ -385,13 +477,13 @@ class _SnappingSheetState extends State<SnappingSheet>
         // The sheet below
         widget.sheetAbove != null
             ? Positioned(
-                top: widget.sheetAboveMargin.top,
                 bottom: _currentDragAmount +
-                    widget.sheetAboveMargin.bottom +
+                    widget.sheetAbove.margin.bottom +
                     widget.grabbingHeight,
-                left: widget.sheetAboveMargin.left,
-                right: widget.sheetAboveMargin.right,
-                child: _wrapDraggable(false, widget.sheetAbove,
+                left: widget.sheetAbove.margin.left,
+                right: widget.sheetAbove.margin.right,
+                height: _getSheetHeight(true),
+                child: _wrapDraggable(false, widget.sheetAbove.child,
                     SnappingSheetListenerType.sheetAbove),
               )
             : SizedBox(),
@@ -401,11 +493,11 @@ class _SnappingSheetState extends State<SnappingSheet>
             ? Positioned(
                 top: constraints.maxHeight -
                     _currentDragAmount +
-                    widget.sheetBelowMargin.top,
-                left: widget.sheetBelowMargin.left,
-                right: widget.sheetBelowMargin.right,
-                bottom: widget.sheetBelowMargin.bottom,
-                child: _wrapDraggable(false, widget.sheetBelow,
+                    widget.sheetBelow.margin.top,
+                left: widget.sheetBelow.margin.left,
+                right: widget.sheetBelow.margin.right,
+                height: _getSheetHeight(false),
+                child: _wrapDraggable(false, widget.sheetBelow.child,
                     SnappingSheetListenerType.sheetBelow),
               )
             : SizedBox(),

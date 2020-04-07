@@ -37,8 +37,11 @@ You can add the snapping sheet to you app by adding the following code
         Widget build(BuildContext context) {
             return Scaffold(
             body: SnappingSheet(
-                    sheetBelow: Container(
-                        color: Colors.red
+                    sheetBelow: SnappingSheetContent(
+                        child: Container(
+                            color: Colors.red,
+                        ),
+                        heightBehavior: SnappingSheetHeight.fit()),
                     ),
                     grabbing: Container(
                         color: Colors.blue,
@@ -71,8 +74,16 @@ witch takes in a list of `SnapPosition`.
     )
 ```
 
-## Other options
+## Sheet content
+|SnappingSheetContent       |Description                            |
+|---------------------------|---------------------------------------|
+|child                      |The widget inside the sheet.|
+|margin                     |The margin for the sheet, can be negative|
+|draggable                  |If the sheet should listen for drag events.|
+|heightBehavior             |How the sheet height should behave when the size is changing|
 
+
+## Other options
 |Name                       |Description                            |
 |---------------------------|---------------------------------------|
 |child                      |The widget behind the sheet.|
@@ -80,11 +91,9 @@ witch takes in a list of `SnapPosition`.
 |sheetAbove                 |The widget that is the remaining space between the top to the top of the grabbing widget|
 |grabbing                   |The widget fixed between the sheetBelow and sheetAbove.|
 |grabbingHeight             |The height of the grabbing widget.|
-|sheetBelowMargin           |The margin for the sheetBelow widget. Can be negative values.|
-|sheetAboveMargin           |The margin for the sheetAbove widget. Can be negative values.|
 |snapPositions              |The different snap positions for the sheet|
 |initSnapPosition           |The init snap position, do not need to exist in the snapPositions list|
-|snappingSheetController     |Control the sheet and get current snap position|
+|snappingSheetController    |Control the sheet and get current snap position|
 |onMove                     |Callback when the sheet is moving.|
 |onSnapBegin                |Callback when a snap begins, happens when the user stops dragging the sheet.|
 |onSnapEnd                  |Callback when a snap is completed.|

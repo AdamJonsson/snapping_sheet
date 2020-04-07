@@ -31,22 +31,24 @@ class _ListViewSnapSheetExampleState extends State<ListViewSnapSheetExample> wit
         title: Text('ListView example'),
       ),
       body: SnappingSheet(
-        sheetAbove: Padding(
-          padding: EdgeInsets.only(bottom: 20.0),
-          child: Align(
-            alignment: Alignment(0.90, 1.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                if(_controller.snapPositions.last != _controller.currentSnapPosition) {
-                  _controller.snapToPosition(_controller.snapPositions.last);
-                } 
-                else {
-                  _controller.snapToPosition(_controller.snapPositions.first);
-                }
-              },
-              child: RotationTransition(
-                child: Icon(Icons.arrow_upward),
-                turns: _arrowIconAnimation,
+        sheetAbove: SnappingSheetContent(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 20.0),
+            child: Align(
+              alignment: Alignment(0.90, 1.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  if(_controller.snapPositions.last != _controller.currentSnapPosition) {
+                    _controller.snapToPosition(_controller.snapPositions.last);
+                  } 
+                  else {
+                    _controller.snapToPosition(_controller.snapPositions.first);
+                  }
+                },
+                child: RotationTransition(
+                  child: Icon(Icons.arrow_upward),
+                  turns: _arrowIconAnimation,
+                ),
               ),
             ),
           ),
@@ -81,7 +83,9 @@ class _ListViewSnapSheetExampleState extends State<ListViewSnapSheetExample> wit
         ),
         grabbingHeight: MediaQuery.of(context).padding.bottom + 50,
         grabbing: GrabSection(),
-        sheetBelow: SheetContent(),
+        sheetBelow: SnappingSheetContent(
+          child: SheetContent()
+        ),
       ),
     );
   }
