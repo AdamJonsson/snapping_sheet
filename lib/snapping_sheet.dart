@@ -180,6 +180,9 @@ class _SnappingSheetState extends State<SnappingSheet>
   /// The init snap position for the sheet
   SnapPosition _initSnapPosition;
 
+  /// The last orientation
+  Orientation _lastOrientation;
+
   @override
   void initState() {
     super.initState();
@@ -458,55 +461,76 @@ class _SnappingSheetState extends State<SnappingSheet>
     }
   }
 
+  void _setCurrentDragAmount(double newAmount) {
+    _currentDragAmount = newAmount;
+    if (widget.onMove != null) {
+      widget.onMove(_currentDragAmount);
+    }
+  }
+
+  void _checkCurrentDragAmount(
+      BoxConstraints constraints, Orientation newOrientation) {
+    if (_currentDragAmount == null) {
+      _currentDragAmount = _getSnapPositionInPixels(_initSnapPosition);
+    }
+    if (_lastOrientation != newOrientation) {
+      _currentDragAmount = _getSnapPositionInPixels(_lastSnappingLocation);
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _setCurrentDragAmount(_currentDragAmount));
+    }
+
+    _lastOrientation = newOrientation;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      _currentConstraints = constraints;
-      if (_currentDragAmount == null) {
-        _currentDragAmount = _getSnapPositionInPixels(_initSnapPosition);
-      }
+    return OrientationBuilder(builder: (context, orientation) {
+      return LayoutBuilder(builder: (context, constraints) {
+        _currentConstraints = constraints;
+        _checkCurrentDragAmount(constraints, orientation);
 
-      return Stack(fit: StackFit.expand, children: <Widget>[
-        // The widget behind the sheet
-        _buildBackground(),
+        return Stack(fit: StackFit.expand, children: <Widget>[
+          // The widget behind the sheet
+          _buildBackground(),
 
-        // The grabing area
-        Positioned(
-            left: 0,
-            right: 0,
-            height: widget.grabbingHeight,
-            bottom: _currentDragAmount,
-            child: _wrapDraggable(
-                false, widget.grabbing, SnappingSheetListenerType.draggable)),
+          // The grabing area
+          Positioned(
+              left: 0,
+              right: 0,
+              height: widget.grabbingHeight,
+              bottom: _currentDragAmount,
+              child: _wrapDraggable(
+                  false, widget.grabbing, SnappingSheetListenerType.draggable)),
 
-        // The sheet below
-        widget.sheetAbove != null
-            ? Positioned(
-                bottom: _currentDragAmount +
-                    widget.sheetAbove.margin.bottom +
-                    widget.grabbingHeight,
-                left: widget.sheetAbove.margin.left,
-                right: widget.sheetAbove.margin.right,
-                height: _getSheetHeight(true),
-                child: _wrapDraggable(false, widget.sheetAbove.child,
-                    SnappingSheetListenerType.sheetAbove),
-              )
-            : SizedBox(),
+          // The sheet below
+          widget.sheetAbove != null
+              ? Positioned(
+                  bottom: _currentDragAmount +
+                      widget.sheetAbove.margin.bottom +
+                      widget.grabbingHeight,
+                  left: widget.sheetAbove.margin.left,
+                  right: widget.sheetAbove.margin.right,
+                  height: _getSheetHeight(true),
+                  child: _wrapDraggable(false, widget.sheetAbove.child,
+                      SnappingSheetListenerType.sheetAbove),
+                )
+              : SizedBox(),
 
-        // The sheet below
-        widget.sheetBelow != null
-            ? Positioned(
-                top: constraints.maxHeight -
-                    _currentDragAmount +
-                    widget.sheetBelow.margin.top,
-                left: widget.sheetBelow.margin.left,
-                right: widget.sheetBelow.margin.right,
-                height: _getSheetHeight(false),
-                child: _wrapDraggable(false, widget.sheetBelow.child,
-                    SnappingSheetListenerType.sheetBelow),
-              )
-            : SizedBox(),
-      ]);
+          // The sheet below
+          widget.sheetBelow != null
+              ? Positioned(
+                  top: constraints.maxHeight -
+                      _currentDragAmount +
+                      widget.sheetBelow.margin.top,
+                  left: widget.sheetBelow.margin.left,
+                  right: widget.sheetBelow.margin.right,
+                  height: _getSheetHeight(false),
+                  child: _wrapDraggable(false, widget.sheetBelow.child,
+                      SnappingSheetListenerType.sheetBelow),
+                )
+              : SizedBox(),
+        ]);
+      });
     });
   }
 }

@@ -1,3 +1,6 @@
+## [2.0.1] - 18/07/2020
+* Fix bug where the snapping sheet do not correct it self when the orientation of the device is changed.
+  
 ## [2.0.0] - 07/05/2020
 * **Breaking change:** The sheetBelow and sheetAbove parameters now takes in a [snappingSheetContent] widget instead of any widget. To fix, just wrap your current widget with a [snappingSheetContent] widget.
 * **Breaking change** Changed so that sheetAboveMargin and sheetBelowMargin must specified in the[snappingSheetContent] widget.
