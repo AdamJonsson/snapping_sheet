@@ -1,6 +1,7 @@
 library snapping_sheet;
 
 import 'dart:math';
+
 import 'package:flutter/widgets.dart';
 
 enum SnappingSheetType { manuel, fixed, fit }
@@ -381,8 +382,8 @@ class _SnappingSheetState extends State<SnappingSheet>
         if (widget.lockOverflowDrag) {
           var newDragAmount = _currentDragAmount - dragEvent.delta.dy;
           if (newDragAmount <
-              widget.snapPositions.first
-                  ._getPositionInPixels(_currentConstraints.maxHeight)) {
+              widget.snapPositions.first._getPositionInPixels(
+                  _currentConstraints.maxHeight - widget.grabbingHeight)) {
             return;
           }
 
