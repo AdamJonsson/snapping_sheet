@@ -9,7 +9,7 @@ enum SnappingSheetType { manuel, fixed, fit }
 class SnappingSheetHeight {
   final SnappingSheetType _type;
 
-  /// When the users drag over the snapp positions that generates the
+  /// When the users drag over the snap positions that generates the
   /// maximum height of the sheet, the sheet can either expand its height
   /// oer keep its height fixed.
   final bool expandOnSnapPositionOverflow;
@@ -17,11 +17,11 @@ class SnappingSheetHeight {
   /// The minimum height of the sheet
   final double minHeight;
 
-  /// the maximum height of the seet
+  /// the maximum height of the sheet
   final double maxHeight;
 
-  /// Make the sheet height manuel by specifing the minHeight or the maxHeight
-  const SnappingSheetHeight.manuel(
+  /// Make the sheet height manual by specifying the minHeight or the maxHeight
+  const SnappingSheetHeight.manual(
       {@required this.minHeight, @required this.maxHeight})
       : _type = SnappingSheetType.manuel,
         expandOnSnapPositionOverflow = false;
@@ -33,7 +33,7 @@ class SnappingSheetHeight {
         this.minHeight = null,
         this.maxHeight = null;
 
-  /// Make the sheet height fit the avaiable space
+  /// Make the sheet height fit the available space
   const SnappingSheetHeight.fit()
       : this._type = SnappingSheetType.fit,
         this.expandOnSnapPositionOverflow = false,
@@ -62,7 +62,7 @@ class SnappingSheetContent {
       this.draggable = false});
 }
 
-/// A snapping position that tells how a [SnappingSheet] snapps to different positions
+/// A snapping position that tells how a [SnappingSheet] snaps to different positions
 class SnapPosition {
   /// The snapping position in pixels
   /// [positionFactor] should be null if this is used.
@@ -96,7 +96,7 @@ class SnapPosition {
 /// A sheet that snaps to different positions
 class SnappingSheet extends StatefulWidget {
   /// The widget behind the [sheetBelow] widget. It has a constant height
-  /// and do not change when the sheet is draged up or down.
+  /// and do not change when the sheet is dragged up or down.
   final Widget child;
 
   /// The sheet that is placed below the [grabbing] widget
@@ -105,11 +105,11 @@ class SnappingSheet extends StatefulWidget {
   /// The sheet that is placed above the [grabbing] widget
   final SnappingSheetContent sheetAbove;
 
-  /// The widget for grabing the [sheetBelow] or [sheetAbove]. It placed between the [sheetBelow] and the
+  /// The widget for grabbing the [sheetBelow] or [sheetAbove]. It placed between the [sheetBelow] and the
   /// [sheetAbove] widget.
   final Widget grabbing;
 
-  /// The height of the grabing widget
+  /// The height of the grabbing widget
   final double grabbingHeight;
 
   /// The different snapping positions for the [sheetBelow]
@@ -121,7 +121,7 @@ class SnappingSheet extends StatefulWidget {
   final SnapPosition initSnapPosition;
 
   /// If true, the grabbing widget can not be draget below the lowest [snapPositions]
-  /// or over the heightest [snapPositions].
+  /// or over the highest [snapPositions].
   final bool lockOverflowDrag;
 
   /// The controller for the [SnappingSheet]
@@ -132,7 +132,7 @@ class SnappingSheet extends StatefulWidget {
 
   final VoidCallback onSnapBegin;
 
-  /// Is called when the [sheetBelow] is snappet to one of the [snapPositions]
+  /// Is called when the [sheetBelow] is snapped to one of the [snapPositions]
   final VoidCallback onSnapEnd;
 
   const SnappingSheet({
@@ -298,7 +298,7 @@ class _SnappingSheetState extends State<SnappingSheet>
     _lastSnappingLocation = snapPosition;
     widget.snappingSheetController?.currentSnapPosition = snapPosition;
 
-    // Create a new cureved animation between the current drag amount and the snapping
+    // Create a new curved animation between the current drag amount and the snapping
     // location
     _snappingAnimation = Tween<double>(
             begin: _currentDragAmount,
@@ -382,8 +382,7 @@ class _SnappingSheetState extends State<SnappingSheet>
         if (widget.lockOverflowDrag) {
           var newDragAmount = _currentDragAmount - dragEvent.delta.dy;
           if (newDragAmount <
-              widget.snapPositions.first._getPositionInPixels(
-                  _currentConstraints.maxHeight - widget.grabbingHeight)) {
+              _getSnapPositionInPixels(widget.snapPositions.first)) {
             return;
           }
 
@@ -494,7 +493,7 @@ class _SnappingSheetState extends State<SnappingSheet>
           // The widget behind the sheet
           _buildBackground(),
 
-          // The grabing area
+          // The grabbing area
           Positioned(
               left: 0,
               right: 0,
@@ -536,7 +535,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   }
 }
 
-/// Controlls the [SnappingSheet] widget
+/// Controls the [SnappingSheet] widget
 class SnappingSheetController {
   Function(SnapPosition value) _setSnapSheetPositionListener;
 
