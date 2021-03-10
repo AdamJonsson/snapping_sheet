@@ -61,7 +61,7 @@ class SnappingSheetContent {
 class SnapPosition {
   /// The snapping position in pixels
   /// [positionFactor] should be null if this is used.
-  final num position;
+  final double position;
 
   /// [isFactor] should be false if position is in pixels.
   final bool isFactor;
@@ -86,7 +86,7 @@ class SnapPosition {
     if (isFactor) {
       return height * position;
     } else {
-      return position.toDouble();
+      return position;
     }
   }
 }
