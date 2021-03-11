@@ -6,10 +6,10 @@ class ListViewSnapSheetExample extends StatefulWidget {
   _ListViewSnapSheetExampleState createState() => _ListViewSnapSheetExampleState();
 }
 
-class _ListViewSnapSheetExampleState extends State<ListViewSnapSheetExample> with SingleTickerProviderStateMixin{
+class _ListViewSnapSheetExampleState extends State<ListViewSnapSheetExample> with SingleTickerProviderStateMixin {
   var _controller = SnappingSheetController();
-  AnimationController _arrowIconAnimationController;
-  Animation<double> _arrowIconAnimation;
+  late AnimationController _arrowIconAnimationController;
+  late Animation<double> _arrowIconAnimation;
 
   double _moveAmount = 0.0;
 
@@ -17,11 +17,8 @@ class _ListViewSnapSheetExampleState extends State<ListViewSnapSheetExample> wit
   void initState() {
     super.initState();
     _arrowIconAnimationController = AnimationController(vsync: this, duration: Duration(seconds: 1));
-    _arrowIconAnimation = Tween(begin: 0.0, end: 0.5).animate(CurvedAnimation(
-      curve: Curves.elasticOut, 
-      reverseCurve: Curves.elasticIn,
-      parent: _arrowIconAnimationController)
-    );
+    _arrowIconAnimation = Tween(begin: 0.0, end: 0.5)
+        .animate(CurvedAnimation(curve: Curves.elasticOut, reverseCurve: Curves.elasticIn, parent: _arrowIconAnimationController));
   }
 
   @override
@@ -38,10 +35,9 @@ class _ListViewSnapSheetExampleState extends State<ListViewSnapSheetExample> wit
               alignment: Alignment(0.90, 1.0),
               child: FloatingActionButton(
                 onPressed: () {
-                  if(_controller.snapPositions.last != _controller.currentSnapPosition) {
+                  if (_controller.snapPositions.last.position != _controller.currentSnapPosition.position) {
                     _controller.snapToPosition(_controller.snapPositions.last);
-                  } 
-                  else {
+                  } else {
                     _controller.snapToPosition(_controller.snapPositions.first);
                   }
                 },
@@ -54,10 +50,9 @@ class _ListViewSnapSheetExampleState extends State<ListViewSnapSheetExample> wit
           ),
         ),
         onSnapEnd: () {
-          if(_controller.snapPositions.last != _controller.currentSnapPosition) {
+          if (_controller.snapPositions.last.position != _controller.currentSnapPosition.position) {
             _arrowIconAnimationController.reverse();
-          }
-          else {
+          } else {
             _arrowIconAnimationController.forward();
           }
         },
@@ -68,9 +63,9 @@ class _ListViewSnapSheetExampleState extends State<ListViewSnapSheetExample> wit
         },
         snappingSheetController: _controller,
         snapPositions: const [
-          SnapPosition(positionPixel: 0.0, snappingCurve: Curves.elasticOut, snappingDuration: Duration(milliseconds: 750)),
-          SnapPosition(positionFactor: 0.4),
-          SnapPosition(positionFactor: 0.8),
+          SnapPosition(position: 0.0, snappingCurve: Curves.elasticOut, snappingDuration: Duration(milliseconds: 750)),
+          SnapPosition(position: 0.4),
+          SnapPosition(position: 0.8),
         ],
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -83,14 +78,17 @@ class _ListViewSnapSheetExampleState extends State<ListViewSnapSheetExample> wit
         ),
         grabbingHeight: MediaQuery.of(context).padding.bottom + 50,
         grabbing: GrabSection(),
-        sheetBelow: SnappingSheetContent(
-          child: SheetContent()
-        ),
+        sheetBelow: SnappingSheetContent(child: SheetContent()),
       ),
     );
   }
-}
 
+  @override
+  void dispose() {
+    _arrowIconAnimationController.dispose();
+    super.dispose();
+  }
+}
 
 class SheetContent extends StatelessWidget {
   @override
@@ -102,9 +100,7 @@ class SheetContent extends StatelessWidget {
         itemCount: 50,
         itemBuilder: (context, index) {
           return Container(
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0))
-            ),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey.shade300, width: 1.0))),
             child: ListTile(
               leading: Icon(Icons.info),
               title: Text('List item $index'),
@@ -116,17 +112,18 @@ class SheetContent extends StatelessWidget {
   }
 }
 
-
 class GrabSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(
-          blurRadius: 20.0,
-          color: Colors.black.withOpacity(0.2),
-        )],
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 20.0,
+            color: Colors.black.withOpacity(0.2),
+          )
+        ],
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
           topRight: Radius.circular(30.0),
@@ -139,15 +136,12 @@ class GrabSection extends StatelessWidget {
             width: 100.0,
             height: 10.0,
             margin: EdgeInsets.only(top: 15.0),
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.all(Radius.circular(5.0))
-            ),
+            decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.all(Radius.circular(5.0))),
           ),
           Container(
             height: 2.0,
             margin: EdgeInsets.only(left: 20, right: 20),
-            color: Colors.grey[300],
+            color: Colors.grey.shade300,
           ),
         ],
       ),

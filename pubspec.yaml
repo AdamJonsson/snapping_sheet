@@ -1,10 +1,10 @@
 name: snapping_sheet
 description: A package that provides a sheet widget that snaps to different vertical positions
-version: 2.0.2
+version: 3.0.0-nullsafety.0
 homepage: https://github.com/AdamJonsson/snapping_sheet
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
   flutter:

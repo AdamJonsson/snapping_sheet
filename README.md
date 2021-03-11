@@ -61,12 +61,14 @@ witch takes in a list of `SnapPosition`.
     SnappingSheet(
         snapPositions: [
             SnapPosition(
-                positionPixel: 25.0, 
+                position: 25.0, 
+                isFactor: false,
                 snappingCurve: Curves.elasticOut, 
                 snappingDuration: Duration(milliseconds: 750)
             ),
             SnapPosition(
-                positionFactor: 0.5, 
+                position: 0.5,
+                isFactor: true,
                 snappingCurve: Curves.ease, 
                 snappingDuration: Duration(milliseconds: 500)
             ),
