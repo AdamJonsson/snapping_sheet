@@ -4,7 +4,7 @@ import 'package:snapping_sheet/src/sheet_size_calculator.dart';
 import 'package:snapping_sheet/src/snapping_sheet_content.dart';
 
 class BelowSheetSizeCalculator extends SheetSizeCalculator {
-  final SnappingSheetContent sheetData;
+  final SnappingSheetContent? sheetData;
   final double currentPosition;
   final double maxHeight;
   final double grabbingHeight;

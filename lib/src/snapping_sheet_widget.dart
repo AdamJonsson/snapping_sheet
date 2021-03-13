@@ -16,6 +16,11 @@ class SnappingSheet extends StatefulWidget {
   final bool lockOverflowDrag;
   final List<SnappingPosition> snappingPositions;
   final SnappingPosition? initialSnappingPosition;
+  final SnappingSheetController? controller;
+
+  final Function(double position)? onSheetMoved;
+  final Function(double position, SnappingPosition snappingPosition)?
+      onSnapCompleted;
 
   SnappingSheet({
     Key? key,
@@ -37,6 +42,9 @@ class SnappingSheet extends StatefulWidget {
     this.initialSnappingPosition,
     required this.child,
     this.lockOverflowDrag = false,
+    this.controller,
+    this.onSheetMoved,
+    this.onSnapCompleted,
   })  : assert(snappingPositions.isNotEmpty),
         super(key: key);
 
@@ -46,7 +54,7 @@ class SnappingSheet extends StatefulWidget {
 
 class _SnappingSheetState extends State<SnappingSheet>
     with TickerProviderStateMixin {
-  double _currentPosition = 200;
+  double _currentPositionPrivate = 0;
   BoxConstraints? _latestConstraints;
   late SnappingPosition _lastSnappingPosition;
   late AnimationController _animationController;
@@ -55,7 +63,8 @@ class _SnappingSheetState extends State<SnappingSheet>
   @override
   void initState() {
     super.initState();
-    _lastSnappingPosition = initSnappingPosition;
+
+    _lastSnappingPosition = _initSnappingPosition;
     _animationController = AnimationController(vsync: this);
     _animationController.addListener(() {
       if (_snappingAnimation == null) return;
@@ -63,15 +72,24 @@ class _SnappingSheetState extends State<SnappingSheet>
         _currentPosition = _snappingAnimation!.value;
       });
     });
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        widget.onSnapCompleted?.call(_currentPosition, _lastSnappingPosition);
+      }
+    });
 
     Future.delayed(Duration(seconds: 0)).then((value) {
       setState(() {
-        _currentPosition = initSnappingPosition.getPositionInPixels(
+        _currentPosition = _initSnappingPosition.getPositionInPixels(
           _latestConstraints!.maxHeight,
           widget.grabbingHeight,
         );
       });
     });
+
+    if (widget.controller != null) {
+      widget.controller!._attachState(this);
+    }
   }
 
   @override
@@ -80,7 +98,14 @@ class _SnappingSheetState extends State<SnappingSheet>
     super.dispose();
   }
 
-  SnappingPosition get initSnappingPosition {
+  set _currentPosition(double newPosition) {
+    widget.onSheetMoved?.call(_currentPosition);
+    _currentPositionPrivate = newPosition;
+  }
+
+  double get _currentPosition => _currentPositionPrivate;
+
+  SnappingPosition get _initSnappingPosition {
     return widget.initialSnappingPosition ?? widget.snappingPositions.first;
   }
 
@@ -164,7 +189,7 @@ class _SnappingSheetState extends State<SnappingSheet>
                 dragStart: _dragStart,
                 dragUpdate: _dragSheet,
                 sizeCalculator: AboveSheetSizeCalculator(
-                  sheetData: widget.sheetAbove!,
+                  sheetData: widget.sheetAbove,
                   currentPosition: _currentPosition,
                   maxHeight: constraints.maxHeight,
                   grabbingHeight: widget.grabbingHeight,
@@ -192,7 +217,7 @@ class _SnappingSheetState extends State<SnappingSheet>
                 dragStart: _dragStart,
                 dragUpdate: _dragSheet,
                 sizeCalculator: BelowSheetSizeCalculator(
-                  sheetData: widget.sheetBelow!,
+                  sheetData: widget.sheetBelow,
                   currentPosition: _currentPosition,
                   maxHeight: constraints.maxHeight,
                   grabbingHeight: widget.grabbingHeight,
@@ -204,5 +229,87 @@ class _SnappingSheetState extends State<SnappingSheet>
         );
       },
     );
+  }
+
+  void _setSheetPositionPixel(double positionPixel) {
+    _animationController.stop();
+    setState(() {
+      _currentPosition = positionPixel;
+    });
+  }
+
+  void _setSheetPositionFactor(double factor) {
+    _animationController.stop();
+    setState(() {
+      _currentPosition = factor * _latestConstraints!.maxHeight;
+    });
+  }
+}
+
+class SnappingSheetController {
+  _SnappingSheetState? _state;
+
+  /// If a state is attached to this controller. [isAttached] must be true
+  /// before any function call from this controller is made
+  bool get isAttached => _state != null;
+
+  void _attachState(_SnappingSheetState state) {
+    _state = state;
+  }
+
+  void _checkAttachment() {
+    assert(
+      isAttached,
+      "SnappingSheet must be attached before calling any function from the controller. Pass in the controller to the snapping sheet widget to attached. Use [isAttached] to check if it is attached or not.",
+    );
+  }
+
+  /// Snaps to a given snapping position.
+  void snapToPosition(SnappingPosition snappingPosition) {
+    _checkAttachment();
+    _state!._snapToPosition(snappingPosition);
+  }
+
+  /// This sets the position of the snapping sheet directly without any
+  /// animation. To use animation, see the [snapToPosition] method.
+  void setSnappingSheetPosition(double positionInPixels) {
+    _checkAttachment();
+    _state!._setSheetPositionPixel(positionInPixels);
+  }
+
+  /// This sets the position of the snapping sheet directly without any
+  /// animation. To use animation, see the [snapToPosition] method.
+  void setSnappingSheetFactor(double positionAsFactor) {
+    _checkAttachment();
+    _state!._setSheetPositionFactor(positionAsFactor);
+  }
+
+  /// Getting the current position of the sheet. This is calculated from bottom
+  /// to top. That is, when the grabbing widget is at the bottom, the
+  /// [currentPosition] is close to zero. If the grabbing widget is at the top,
+  /// the [currentPosition] is close the the height of the available height of
+  /// the [SnappingSheet].
+  double get currentPosition {
+    _checkAttachment();
+    return _state!._currentPosition;
+  }
+
+  /// Getting the current snapping position of the sheet.
+  SnappingPosition get currentSnappingPosition {
+    _checkAttachment();
+    return _state!._lastSnappingPosition;
+  }
+
+  /// Returns true if the snapping sheet is currently trying to snap to a
+  /// position.
+  bool get currentlySnapping {
+    _checkAttachment();
+    return _state!._animationController.isAnimating;
+  }
+
+  /// Stops the current snapping if there is one ongoing.
+  void stopCurrentSnapping() {
+    _checkAttachment();
+    return _state!._animationController.stop();
   }
 }
