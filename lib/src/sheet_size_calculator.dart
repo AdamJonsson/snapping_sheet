@@ -3,7 +3,7 @@ import 'package:snapping_sheet/src/sheet_size_behaviors.dart';
 import 'package:snapping_sheet/src/snapping_sheet_content.dart';
 
 abstract class SheetSizeCalculator {
-  final SnappingSheetContent sheetData;
+  final SnappingSheetContent? sheetData;
   final double maxHeight;
 
   SheetSizeCalculator(
@@ -12,7 +12,7 @@ abstract class SheetSizeCalculator {
   );
 
   double? getSheetStartPosition() {
-    var sizeBehavior = sheetData.sizeBehavior;
+    var sizeBehavior = sheetData!.sizeBehavior;
     if (sizeBehavior is SheetSizeDynamic) return 0;
     if (sizeBehavior is SheetSizeStatic) {
       if (!sizeBehavior.expandOnOverflow) return null;
