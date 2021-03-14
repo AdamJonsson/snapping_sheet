@@ -69,6 +69,9 @@ class SnappingCalculator {
         this.grabbingHeight,
       );
 
+      // We have a perfect match. Often happens when overflow drag.
+      if (posPixels == currentPosition) return true;
+
       bool isAbove = posPixels > currentPosition;
 
       if (isAbove && dragDirection == DragDirection.down) return false;

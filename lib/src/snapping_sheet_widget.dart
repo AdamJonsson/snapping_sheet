@@ -63,6 +63,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   @override
   void initState() {
     super.initState();
+    _setSheetLocationData();
 
     _lastSnappingPosition = _initSnappingPosition;
     _animationController = AnimationController(vsync: this);
@@ -98,6 +99,19 @@ class _SnappingSheetState extends State<SnappingSheet>
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(covariant SnappingSheet oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _setSheetLocationData();
+  }
+
+  void _setSheetLocationData() {
+    if (widget.sheetAbove != null)
+      widget.sheetAbove!.location = SheetLocation.above;
+    if (widget.sheetBelow != null)
+      widget.sheetBelow!.location = SheetLocation.below;
+  }
+
   set _currentPosition(double newPosition) {
     widget.onSheetMoved?.call(_currentPosition);
     _currentPositionPrivate = newPosition;
@@ -112,12 +126,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   double _getNewPosition(double dragAmount) {
     var newPosition = _currentPosition - dragAmount;
     if (widget.lockOverflowDrag) {
-      var calculator = SnappingCalculator(
-          allSnappingPositions: widget.snappingPositions,
-          lastSnappingPosition: _lastSnappingPosition,
-          maxHeight: _latestConstraints!.maxHeight,
-          grabbingHeight: widget.grabbingHeight,
-          currentPosition: _currentPosition);
+      var calculator = _getSnappingCalculator();
       var maxPos = calculator.getBiggestPositionPixels();
       var minPos = calculator.getSmallestPositionPixels();
       if (newPosition > maxPos) return maxPos;
@@ -127,24 +136,18 @@ class _SnappingSheetState extends State<SnappingSheet>
   }
 
   void _dragSheet(double dragAmount) {
+    if (_animationController.isAnimating) {
+      _animationController.stop();
+    }
     setState(() {
       _currentPosition = _getNewPosition(dragAmount);
     });
   }
 
   void _dragEnd() {
-    var bestSnappingPosition = SnappingCalculator(
-            allSnappingPositions: widget.snappingPositions,
-            lastSnappingPosition: _lastSnappingPosition,
-            maxHeight: _latestConstraints!.maxHeight,
-            grabbingHeight: widget.grabbingHeight,
-            currentPosition: _currentPosition)
-        .getBestSnappingPosition();
+    var bestSnappingPosition =
+        _getSnappingCalculator().getBestSnappingPosition();
     _snapToPosition(bestSnappingPosition);
-  }
-
-  void _dragStart() {
-    _animationController.stop();
   }
 
   void _snapToPosition(SnappingPosition snappingPosition) {
@@ -171,6 +174,15 @@ class _SnappingSheetState extends State<SnappingSheet>
     _animationController.forward();
   }
 
+  SnappingCalculator _getSnappingCalculator() {
+    return SnappingCalculator(
+        allSnappingPositions: widget.snappingPositions,
+        lastSnappingPosition: _lastSnappingPosition,
+        maxHeight: _latestConstraints!.maxHeight,
+        grabbingHeight: widget.grabbingHeight,
+        currentPosition: _currentPosition);
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -186,8 +198,9 @@ class _SnappingSheetState extends State<SnappingSheet>
               // The above sheet content
               SheetContentWrapper(
                 dragEnd: _dragEnd,
-                dragStart: _dragStart,
                 dragUpdate: _dragSheet,
+                currentPosition: _currentPosition,
+                snappingCalculator: _getSnappingCalculator(),
                 sizeCalculator: AboveSheetSizeCalculator(
                   sheetData: widget.sheetAbove,
                   currentPosition: _currentPosition,
@@ -205,7 +218,6 @@ class _SnappingSheetState extends State<SnappingSheet>
                 height: widget.grabbingHeight,
                 child: OnDragWrapper(
                   dragEnd: _dragEnd,
-                  dragStart: _dragStart,
                   dragUpdate: _dragSheet,
                   child: widget.grabbing,
                 ),
@@ -214,8 +226,9 @@ class _SnappingSheetState extends State<SnappingSheet>
               // The below sheet content
               SheetContentWrapper(
                 dragEnd: _dragEnd,
-                dragStart: _dragStart,
                 dragUpdate: _dragSheet,
+                currentPosition: _currentPosition,
+                snappingCalculator: _getSnappingCalculator(),
                 sizeCalculator: BelowSheetSizeCalculator(
                   sheetData: widget.sheetBelow,
                   currentPosition: _currentPosition,

@@ -52,4 +52,10 @@ class SnappingPosition {
     if (this._positionPixel != null) return this._positionPixel!;
     return this._positionFactor! * maxHeight;
   }
+
+  bool operator ==(other) =>
+      other is SnappingPosition &&
+      other._positionFactor == this._positionFactor &&
+      other._positionPixel == this._positionPixel;
+  int get hashCode => _positionFactor.hashCode ^ _positionPixel.hashCode;
 }
