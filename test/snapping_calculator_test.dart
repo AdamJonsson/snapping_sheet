@@ -204,6 +204,25 @@ void main() {
     });
   });
 
+  group('Edge cases.', () {
+    test("Testing when [currentPosition] = [snappingPosition]", () {
+      var localSnappingPositions = [
+        SnappingPosition.pixels(positionPixels: 700),
+        SnappingPosition.pixels(positionPixels: 800),
+        SnappingPosition.pixels(positionPixels: 900),
+        SnappingPosition.pixels(positionPixels: 1000),
+      ];
+      var next = SnappingCalculator(
+              allSnappingPositions: localSnappingPositions,
+              lastSnappingPosition: localSnappingPositions[2],
+              maxHeight: maxHeight,
+              grabbingHeight: grabbingHeight,
+              currentPosition: 1000)
+          .getBestSnappingPosition();
+      expect(next, localSnappingPositions[3]);
+    });
+  });
+
   group("Testing with only one snapping position", () {
     var localSnappingPositions = [
       SnappingPosition.factor(positionFactor: 0.5),

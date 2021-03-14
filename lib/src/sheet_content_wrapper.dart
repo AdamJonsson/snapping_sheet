@@ -1,38 +1,71 @@
 import 'package:flutter/widgets.dart';
 import 'package:snapping_sheet/src/on_drag_wrapper.dart';
+import 'package:snapping_sheet/src/scroll_controller_override.dart';
 import 'package:snapping_sheet/src/sheet_size_calculator.dart';
+import 'package:snapping_sheet/src/snapping_calculator.dart';
 import 'package:snapping_sheet/src/snapping_sheet_content.dart';
 
-class SheetContentWrapper extends StatelessWidget {
+class SheetContentWrapper extends StatefulWidget {
   final SheetSizeCalculator sizeCalculator;
   final SnappingSheetContent? sheetData;
 
   final Function(double) dragUpdate;
-  final VoidCallback dragStart;
   final VoidCallback dragEnd;
+  final double currentPosition;
+  final SnappingCalculator snappingCalculator;
 
   const SheetContentWrapper(
       {Key? key,
       required this.sheetData,
       required this.sizeCalculator,
+      required this.currentPosition,
+      required this.snappingCalculator,
       required this.dragUpdate,
-      required this.dragStart,
       required this.dragEnd})
       : super(key: key);
 
-  Widget _wrapSheetDataWithDraggable() {
-    if (!sheetData!.draggable) return sheetData!;
+  @override
+  _SheetContentWrapperState createState() => _SheetContentWrapperState();
+}
+
+class _SheetContentWrapperState extends State<SheetContentWrapper> {
+  Widget _wrapWithDragWrapper(Widget child) {
     return OnDragWrapper(
-      dragStart: dragStart,
-      dragEnd: dragEnd,
-      child: sheetData!,
-      dragUpdate: dragUpdate,
+      dragEnd: widget.dragEnd,
+      child: child,
+      dragUpdate: widget.dragUpdate,
     );
+  }
+
+  Widget _wrapWithScrollControllerOverride(Widget child) {
+    return ScrollControllerOverride(
+      sizeCalculator: widget.sizeCalculator,
+      scrollController: widget.sheetData!.childScrollController!,
+      dragUpdate: widget.dragUpdate,
+      dragEnd: widget.dragEnd,
+      currentPosition: widget.currentPosition,
+      snappingCalculator: widget.snappingCalculator,
+      sheetLocation: widget.sheetData!.location,
+      child: child,
+    );
+  }
+
+  Widget _wrapWithNecessaryWidgets(Widget child) {
+    Widget wrappedChild = child;
+    if (widget.sheetData!.draggable) {
+      wrappedChild = _wrapWithDragWrapper(wrappedChild);
+    }
+    if (widget.sheetData!.childScrollController != null) {
+      wrappedChild = _wrapWithScrollControllerOverride(wrappedChild);
+    }
+    return wrappedChild;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (sheetData == null) return SizedBox();
-    return sizeCalculator.positionWidget(child: _wrapSheetDataWithDraggable());
+    if (widget.sheetData == null) return SizedBox();
+    return widget.sizeCalculator.positionWidget(
+      child: _wrapWithNecessaryWidgets(widget.sheetData!.child),
+    );
   }
 }
