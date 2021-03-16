@@ -9,43 +9,42 @@
 
 A package that provides a highly customizable sheet widget that snaps to different vertical positions
 </br></br>
-<center>
-    <table >
-        <tr>
-            <td>
-                <b>
-                    Can adapt to scrollable <br> 
-                    widgets inside the sheet.
-                </b>
-            </td>
-            <td>
-                <b>
-                    Fully customizable animation </br> 
-                    and content.
-                </b>
-            </td>
-            <td>
-                <b>
-                    Not limited to the bottom part 
-                    </br> of the app.
-                </b>
-            </td>
-        <tr>
-        <tr>
-            <td>
-                <img src="./assets/preview.gif" width="300">
-            </td>
-            <td>
-                <img src="./assets/placeholder.gif" width="300">
-            </td>
-            <td>
-                <img src="./assets/preview_reverse.gif" width="300">
-            </td>
-        </tr>
-    </table>
-</center>
+<table >
+    <tr>
+        <td>
+            <b>
+                Can adapt to scrollable <br> 
+                widgets inside the sheet.
+            </b>
+        </td>
+        <td>
+            <b>
+                Fully customizable animation </br> 
+                and content.
+            </b>
+        </td>
+        <td>
+            <b>
+                Not limited to the bottom part 
+                </br> of the app.
+            </b>
+        </td>
+    <tr>
+    <tr>
+        <td>
+            <img src="./assets/preview.gif" width="300">
+        </td>
+        <td>
+            <img src="./assets/placeholder.gif" width="300">
+        </td>
+        <td>
+            <img src="./assets/preview_reverse.gif" width="300">
+        </td>
+    </tr>
+</table>
 </br>
-You can find and run the examples by cloning the following [repository](https://github.com/AdamJonsson/snapping_sheet) and run the app from the example folder.
+
+You can find and run the examples closing this repository and running the app from the [example](https://github.com/AdamJonsson/snapping_sheet/example/) folder.
 
 ## Getting started
 
