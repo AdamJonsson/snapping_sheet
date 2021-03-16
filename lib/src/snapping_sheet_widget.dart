@@ -195,6 +195,19 @@ class _SnappingSheetState extends State<SnappingSheet>
               // The background of the snapping sheet
               Positioned.fill(child: widget.child),
 
+              // The grabber content
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: _currentPosition - widget.grabbingHeight / 2,
+                height: widget.grabbingHeight,
+                child: OnDragWrapper(
+                  dragEnd: _dragEnd,
+                  dragUpdate: _dragSheet,
+                  child: widget.grabbing,
+                ),
+              ),
+
               // The above sheet content
               SheetContentWrapper(
                 dragEnd: _dragEnd,
@@ -208,19 +221,6 @@ class _SnappingSheetState extends State<SnappingSheet>
                   grabbingHeight: widget.grabbingHeight,
                 ),
                 sheetData: widget.sheetAbove,
-              ),
-
-              // The grabber content
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: _currentPosition - widget.grabbingHeight / 2,
-                height: widget.grabbingHeight,
-                child: OnDragWrapper(
-                  dragEnd: _dragEnd,
-                  dragUpdate: _dragSheet,
-                  child: widget.grabbing,
-                ),
               ),
 
               // The below sheet content
