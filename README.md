@@ -193,5 +193,9 @@ You can listen to movement and when a snapping animation is completed by using t
             print("Current position $sheetPosition");
             print("Current snapping position $snappingPosition");
         },
+        onSnapStart: (sheetPosition, snappingPosition) {
+            print("Current position $sheetPosition");
+            print("Next snapping position $snappingPosition");
+        },
     )
 ```
