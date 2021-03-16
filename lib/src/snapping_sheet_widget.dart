@@ -22,6 +22,10 @@ class SnappingSheet extends StatefulWidget {
   final Function(double position, SnappingPosition snappingPosition)?
       onSnapCompleted;
 
+  /// This is called when a snapping animation starts
+  final Function(double position, SnappingPosition snappingPosition)?
+      onSnapStart;
+
   SnappingSheet({
     Key? key,
     this.sheetAbove,
@@ -45,6 +49,7 @@ class SnappingSheet extends StatefulWidget {
     this.controller,
     this.onSheetMoved,
     this.onSnapCompleted,
+    this.onSnapStart,
   })  : assert(snappingPositions.isNotEmpty),
         super(key: key);
 
@@ -151,6 +156,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   }
 
   void _snapToPosition(SnappingPosition snappingPosition) {
+    widget.onSnapStart?.call(_currentPosition, snappingPosition);
     _animateToPosition(snappingPosition);
     _lastSnappingPosition = snappingPosition;
   }
