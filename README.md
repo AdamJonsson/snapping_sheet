@@ -33,13 +33,13 @@ A package that provides a highly customizable sheet widget that snaps to differe
         <tr>
         <tr>
             <td>
-                <img src="./assets/preview.gif" width="200">
+                <img src="./assets/preview.gif" width="300">
             </td>
             <td>
-                <img src="./assets/placeholder.gif" width="200">
+                <img src="./assets/placeholder.gif" width="300">
             </td>
             <td>
-                <img src="./assets/preview_reverse.gif" width="200">
+                <img src="./assets/preview_reverse.gif" width="300">
             </td>
         </tr>
     </table>
