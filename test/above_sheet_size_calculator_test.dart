@@ -12,7 +12,7 @@ void main() {
       sheetData: SnappingSheetContent(
         child: SizedBox(),
         draggable: false,
-        sizeBehavior: SheetSizeDynamic(),
+        sizeBehavior: SheetSizeFill(),
       ),
     );
     test('End position.', () {

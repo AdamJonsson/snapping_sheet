@@ -13,7 +13,7 @@ abstract class SheetSizeCalculator {
 
   double? getSheetStartPosition() {
     var sizeBehavior = sheetData!.sizeBehavior;
-    if (sizeBehavior is SheetSizeDynamic) return 0;
+    if (sizeBehavior is SheetSizeFill) return 0;
     if (sizeBehavior is SheetSizeStatic) {
       if (!sizeBehavior.expandOnOverflow) return null;
       if (getVisibleHeight() > sizeBehavior.height) {

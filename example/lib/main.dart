@@ -1,3 +1,4 @@
+import 'package:example/pages/getting_started_example.dart';
 import 'package:example/pages/placeholder_example.dart';
 import 'package:example/pages/preview_page.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,11 @@ class Menu extends StatelessWidget {
                       page: PreviewReversePage(),
                       text: "Preview Reverse Example",
                       color: Colors.grey[300],
+                    ),
+                    MenuButton(
+                      page: GettingStartedExample(),
+                      text: "Getting started example",
+                      color: Colors.green[300],
                     ),
                   ],
                 ),

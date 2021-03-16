@@ -2,8 +2,8 @@ abstract class SheetSizeBehavior {
   const SheetSizeBehavior();
 }
 
-class SheetSizeDynamic implements SheetSizeBehavior {
-  const SheetSizeDynamic();
+class SheetSizeFill implements SheetSizeBehavior {
+  const SheetSizeFill();
 }
 
 class SheetSizeStatic implements SheetSizeBehavior {

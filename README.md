@@ -1,50 +1,76 @@
-# Snapping sheet
+<img src="./assets/ReadmeBanner.png">
+
+# Snapping Sheet
+![example workflow](https://github.com/adamjonsson/snapping_sheet/actions/workflows/dart.yml/badge.svg)
+[![pub points](https://badges.bar/snapping_sheet/pub%20points)](https://pub.dev/packages/snapping_sheet/score)
+[![popularity](https://badges.bar/snapping_sheet/popularity)](https://pub.dev/packages/snapping_sheet/score)
+[![likes](https://badges.bar/snapping_sheet/likes)](https://pub.dev/packages/snapping_sheet/score)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A package that provides a highly customizable sheet widget that snaps to different vertical positions
+</br></br>
+<center>
+    <table >
+        <tr>
+            <td>
+                <b>
+                    Can adapt to scrollable <br> 
+                    widgets inside the sheet.
+                </b>
+            </td>
+            <td>
+                <b>
+                    Fully customizable animation </br> 
+                    and content.
+                </b>
+            </td>
+            <td>
+                <b>
+                    Not limited to the bottom part 
+                    </br> of the app.
+                </b>
+            </td>
+        <tr>
+        <tr>
+            <td>
+                <img src="./assets/preview.gif" width="200">
+            </td>
+            <td>
+                <img src="./assets/placeholder.gif" width="200">
+            </td>
+            <td>
+                <img src="./assets/preview_reverse.gif" width="200">
+            </td>
+        </tr>
+    </table>
+</center>
+</br>
+You can find and run the examples by cloning the following [repository](https://github.com/AdamJonsson/snapping_sheet) and run the app from the example folder.
 
-<table>
-    <tr>
-        <td>Using a ListView in <br> sheetBelow</td>
-        <td>Example using only <br> placeholders</td>
-        <td>Using a ListView in <br> sheetAbove</td>
-    <tr>
-    <tr>
-        <td>
-            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/useExample.gif" width="160">
-        </td>
-        <td>
-            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/layoutExample.gif" width="160">
-        </td>
-        <td>
-            <img src="https://raw.githubusercontent.com/AdamJonsson/snapping_sheet/master/assets/topsheetExample.gif" width="160">
-        </td>
-    </tr>
-</table>
+## Getting started
 
-You can run the examples by cloning the following [repository](https://github.com/AdamJonsson/snapping_sheet) and run the app from the example folder.
+As usual, begin by adding the package to your pubspec.yaml file, see [install instruction](https://pub.dev/packages/snapping_sheet#-installing-tab-).
 
-## Quick start
-
-Begin by following the [install](https://pub.dev/packages/snapping_sheet#-installing-tab-) instruction.
-
-You can add the snapping sheet to you app by adding the following code
+Here is the most basic setup with the Snapping Sheet:
 ```dart
     import 'package:flutter/material.dart';
     import 'package:snapping_sheet/snapping_sheet.dart';
 
-    class SnapSheetExample extends StatelessWidget {
+    class GettingStartedExample extends StatelessWidget {
         @override
         Widget build(BuildContext context) {
             return Scaffold(
-            body: SnappingSheet(
-                    sheetBelow: SnappingSheetContent(
-                        child: Container(
-                            color: Colors.red,
-                        ),
-                        heightBehavior: SnappingSheetHeight.fit()),
-                    ),
-                    grabbing: Container(
-                        color: Colors.blue,
+                body: SnappingSheet(
+                    // TODO: Add your content that is placed
+                    // behind the sheet.
+                    child: MyOwnPageContent(), 
+                    grabbingHeight: 75,
+                    // TODO: Add your grabbing widget here,
+                    grabbing: MyOwnGrabbingWidget(),
+                    sheetAbove: SnappingSheetContent(
+                        draggable: true,
+                        // TODO: Add your sheet content here
+                        child: MyOwnSheetContent(),
                     ),
                 ),
             );
@@ -52,49 +78,121 @@ You can add the snapping sheet to you app by adding the following code
     }
 ```
 
-## Snap positions
+## Customize snapping positions
 
-To change the snap positions for the sheet, change the `snapPositions` parameter 
-witch takes in a list of `SnapPosition`.
+To change the snap positions for the sheet, change the `snappingPositions` parameter 
+witch takes in a list of `SnappingPosition.factor` or `SnappingPosition.pixels`. These 
+two objects are used to specify the location using a factor or pixels. You also have the option 
+to specify the duration and curve of how the sheet should snap to that given position.
 
 ```dart
     SnappingSheet(
-        snapPositions: [
-            SnapPosition(
-                positionPixel: 25.0, 
-                snappingCurve: Curves.elasticOut, 
-                snappingDuration: Duration(milliseconds: 750)
+        snappingPositions: [
+            SnappingPosition.factor(
+                positionFactor: 0.0,
+                snappingCurve: Curves.easeOutExpo,
+                snappingDuration: Duration(seconds: 1),
+                grabbingContentOffset: GrabbingContentOffset.top,
             ),
-            SnapPosition(
-                positionFactor: 0.5, 
-                snappingCurve: Curves.ease, 
-                snappingDuration: Duration(milliseconds: 500)
+            SnappingPosition.pixels(
+                positionPixels: 400,
+                snappingCurve: Curves.elasticOut,
+                snappingDuration: Duration(milliseconds: 1750),
+            ),
+            SnappingPosition.factor(
+                positionFactor: 1.0,
+                snappingCurve: Curves.bounceOut,
+                snappingDuration: Duration(seconds: 1),
+                grabbingContentOffset: GrabbingContentOffset.bottom,
             ),
         ],
     )
 ```
 
-## Sheet content
-|SnappingSheetContent       |Description                            |
-|---------------------------|---------------------------------------|
-|child                      |The widget inside the sheet.|
-|margin                     |The margin for the sheet, can be negative|
-|draggable                  |If the sheet should listen for drag events.|
-|heightBehavior             |How the sheet height should behave when the size is changing|
+## Adding content to the sheet
+You can place content both below or/and above the grabbing part of the sheet. If you do not want any content in the above or below part of the sheet, pass in null. 
+* **`sizeBehavior`**: How the size of the content should behave. Can either be `SheetSizeFill` which fills the available height of the sheet, or `SheetSizeStatic`, which takes in a height that is respected in the sheet.
+* **`draggable`**: If the sheet itself can be draggable to expand or close the Snapping Sheet.
+* **`child`**: Any Widget of your choosing.
+```dart
+    SnappingSheet(
+        sheetAbove: SnappingSheetContent(
+            sizeBehavior: SheetSizeFill(),
+            draggable: false,
+            child: Container(color: Colors.blue),
+        ),
+        sheetBelow: SnappingSheetContent(
+            sizeBehavior: SheetSizeStatic(height: 300),
+            draggable: true,
+            child: Container(color: Colors.red),
+        ),
+    )
+```
 
+## Make SnappingSheet adapt to a scroll controller
+In order to make the sheet know about the scroll controller, you need to provide it in the SnappingSheetContent class (See example below). 
+```dart
+    sheetBelow: SnappingSheetContent(
+        // Pass in the scroll controller here!
+        childScrollController: _myScrollController,
+        draggable: true,
+        child: ListView(
+            // And in the scrollable widget that you create!
+            controller: _myScrollController,
 
-## Other options
-|Name                       |Description                            |
-|---------------------------|---------------------------------------|
-|child                      |The widget behind the sheet.|
-|sheetBelow                 |The widget that is the remaining space between the bottom to the bottom of the grabbing widget.|
-|sheetAbove                 |The widget that is the remaining space between the top to the top of the grabbing widget|
-|grabbing                   |The widget fixed between the sheetBelow and sheetAbove.|
-|grabbingHeight             |The height of the grabbing widget.|
-|snapPositions              |The different snap positions for the sheet|
-|initSnapPosition           |The init snap position, do not need to exist in the snapPositions list|
-|snappingSheetController    |Control the sheet and get current snap position|
-|onMove                     |Callback when the sheet is moving.|
-|onSnapBegin                |Callback when a snap begins, happens when the user stops dragging the sheet.|
-|onSnapEnd                  |Callback when a snap is completed.|
-|lockOverflowDrag           |Prevents the grabbing sheet to be dragged above the highest snapPosition or below the lowest snapPosition.|
+            // OBS! Should be false if it is in sheetBelow.
+            // OBS! Should be true if it is in sheetAbove.
+            reverse: false,
+        ),
+    ),
+```
+**OBS** that the scrollable widget, e.g `ListView`, `SingleChildScrollView`, etc. needs to have the correct `reverse` value depending on were it is located. If the scrollable widget is in the sheetBelow, the reverse value should be set to false. If it is located in the sheetAbove it should be set to true. The reason is that the current logic of the SnappingSheet only support that configuration of a scrollable widget.  
+
+## Using the SnappingSheetController
+You can control the Snapping Sheet using the `SnappingSheetController`
+```dart
+
+    // Create your controller
+    final snappingSheetController = SnappingSheetController();
+    SnappingSheet(
+
+        // Connect it to the SnappingSheet
+        controller: SnappingSheetController();
+
+        sheetAbove: SnappingSheetContent(
+            draggable: false,
+            child: Container(color: Colors.blue),
+        ),
+        sheetBelow: SnappingSheetContent(
+            draggable: true,
+            child: Container(color: Colors.red),
+        ),
+    )
+
+    // You can now control the sheet in multiple ways.
+    snappingSheetController.snapToPosition(
+      SnappingPosition.factor(positionFactor: 0.75),
+    );
+    snappingSheetController.stopCurrentSnapping();
+    snappingSheetController.setSnappingSheetPosition(100);
+
+    // You can also extract information from the sheet
+    snappingSheetController.currentPosition;
+    snappingSheetController.currentSnappingPosition;
+    snappingSheetController.currentlySnapping;
+    snappingSheetController.isAttached;
+```
+
+## Listen to changes
+You can listen to movement and when a snapping animation is completed by using the following parameters:
+```dart
+    SnappingSheet(
+        onSheetMoved: (sheetPosition) {
+            print("Current position $sheetPosition");
+        },
+        onSnapCompleted: (sheetPosition, snappingPosition) {
+            print("Current position $sheetPosition");
+            print("Current snapping position $snappingPosition");
+        },
+    )
+```

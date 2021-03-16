@@ -9,7 +9,7 @@ enum SheetLocation {
 
 class SnappingSheetContent {
   /// The size behavior of the sheet. Can either be [SheetSizeStatic] or
-  /// [SheetSizeDynamic].
+  /// [SheetSizeFill].
   final SheetSizeBehavior sizeBehavior;
 
   /// When given a scroll controller that is attached to scrollable view, e.g
@@ -27,7 +27,7 @@ class SnappingSheetContent {
   SnappingSheetContent({
     required Widget child,
     this.draggable = false,
-    this.sizeBehavior = const SheetSizeDynamic(),
+    this.sizeBehavior = const SheetSizeFill(),
     this.childScrollController,
   }) : this._child = child;
 
