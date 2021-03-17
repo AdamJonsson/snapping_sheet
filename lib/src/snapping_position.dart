@@ -1,8 +1,15 @@
 import 'package:flutter/widgets.dart';
 
+/// This class is an helper class for specifying the [grabbingContentOffset]
+/// param in a given [SnappingPosition].
 class GrabbingContentOffset {
+  /// The snapping position aligns at the top part of the grabbing content
   static const top = 1.0;
+
+  /// The snapping position aligns at the middle part of the grabbing content
   static const middle = 0.0;
+
+  /// The snapping position aligns at the bottom part of the grabbing content
   static const bottom = -1.0;
 }
 
@@ -10,10 +17,28 @@ class SnappingPosition {
   final double? _positionPixel;
   final double? _positionFactor;
 
-  /// How the snapping position should be offset from the grabbing content
-  /// height. Must be a value between -1 and 1. Use the helper class
-  /// [GrabbingContentOffset] with choosing correct offset. Default is
-  /// [GrabbingContentOffset.middle]
+  /// The snapping position alignment regarding the grabbing content.
+  ///
+  /// This is often used when you want a snapping position at the top or bottom
+  /// of the screen, but want the entire grabbing widget to be visible.
+  ///
+  /// For example, if you have a snapping position at the top of the screen,
+  /// you usually use [GrabbingContentOffset.bottom]. See example:
+  /// ```dart
+  /// SnappingPosition.factor(
+  ///   positionFactor: 1.0,
+  ///   grabbingContentOffset: GrabbingContentOffset.bottom,
+  /// ),
+  /// ```
+  ///
+  /// Or if you have a snapping position at the bottom of the screen, you
+  /// usually use [GrabbingContentOffset.bottom]. See example:
+  /// ```dart
+  /// SnappingPosition.factor(
+  ///   positionFactor: 0.0,
+  ///   grabbingContentOffset: GrabbingContentOffset.top,
+  /// ),
+  /// ```
   final double grabbingContentOffset;
 
   /// The animation curve to this snapping position
@@ -33,7 +58,7 @@ class SnappingPosition {
 
   /// Creates a snapping position that is given a positionFactor
   /// [positionFactor]: 1 = Full size; 0 = Smallest size. Can be bigger than 1
-  /// and smaller than 0
+  /// and smaller than 0 if that is wanted.
   const SnappingPosition.factor({
     required double positionFactor,
     this.snappingCurve = Curves.easeOutSine,

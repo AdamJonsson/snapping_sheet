@@ -18,8 +18,10 @@ class SnappingSheetContent {
   ///
   /// OBS, the scrollable view needs to have the [reverse] parameter set to
   /// false if located in the below sheet and true if located in the above
-  /// sheet. Otherwise, the logic wont behave as intended.
+  /// sheet. Otherwise, the logic do not behave as intended.
   final ScrollController? childScrollController;
+
+  /// If the content should be draggable.
   final bool draggable;
   Widget _child;
   SheetLocation location = SheetLocation.unknown;
