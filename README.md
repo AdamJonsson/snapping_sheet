@@ -1,4 +1,4 @@
-<img src="./assets/ReadmeBanner.png">
+<img src="https://github.com/AdamJonsson/snapping_sheet/raw/3.0.0/assets/ReadmeBanner.png">
 
 # Snapping Sheet
 ![example workflow](https://github.com/adamjonsson/snapping_sheet/actions/workflows/dart.yml/badge.svg)
@@ -32,13 +32,13 @@ A package that provides a highly customizable sheet widget that snaps to differe
     <tr>
     <tr>
         <td>
-            <img src="./assets/preview.gif" width="300">
+            <img src="https://github.com/AdamJonsson/snapping_sheet/raw/3.0.0/assets/preview.gif" width="300">
         </td>
         <td>
-            <img src="./assets/placeholder.gif" width="300">
+            <img src="https://github.com/AdamJonsson/snapping_sheet/raw/3.0.0/assets/placeholder.gif" width="300">
         </td>
         <td>
-            <img src="./assets/preview_reverse.gif" width="300">
+            <img src="https://github.com/AdamJonsson/snapping_sheet/blob/3.0.0/assets/preview_reverse.gif" width="300">
         </td>
     </tr>
 </table>
