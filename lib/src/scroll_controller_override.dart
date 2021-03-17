@@ -32,6 +32,7 @@ class ScrollControllerOverride extends StatefulWidget {
 
 class _ScrollControllerOverrideState extends State<ScrollControllerOverride> {
   DragDirection? _currentDragDirection;
+  double _currentLockPosition = 0;
 
   @override
   void initState() {
@@ -52,6 +53,17 @@ class _ScrollControllerOverrideState extends State<ScrollControllerOverride> {
 
   void _overrideScroll(double dragAmount) {
     if (!_allowScrolling) widget.dragUpdate(dragAmount);
+  }
+
+  void _setLockPosition() {
+    if (_currentDragDirection == DragDirection.up &&
+            widget.sheetLocation == SheetLocation.below ||
+        _currentDragDirection == DragDirection.down &&
+            widget.sheetLocation == SheetLocation.above) {
+      _currentLockPosition = widget.scrollController.position.pixels;
+    } else {
+      _currentLockPosition = 0;
+    }
   }
 
   bool get _allowScrolling {
@@ -96,23 +108,28 @@ class _ScrollControllerOverrideState extends State<ScrollControllerOverride> {
       widget.snappingCalculator.getSmallestPositionPixels();
 
   void _lockScrollPosition(ScrollController controller) {
-    controller.position.setPixels(0);
+    controller.position.setPixels(_currentLockPosition);
   }
 
   void _setDragDirection(double dragAmount) {
     this._currentDragDirection =
         dragAmount > 0 ? DragDirection.down : DragDirection.up;
-    print(this._currentDragDirection);
   }
 
   @override
   Widget build(BuildContext context) {
     return Listener(
+      onPointerDown: (_) {
+        print("Test");
+      },
       onPointerMove: (dragEvent) {
         _setDragDirection(dragEvent.delta.dy);
+        _setLockPosition();
         _overrideScroll(dragEvent.delta.dy);
       },
       onPointerUp: (_) {
+        if (!_allowScrolling)
+          widget.scrollController.jumpTo(_currentLockPosition);
         widget.dragEnd();
       },
       child: widget.child,
