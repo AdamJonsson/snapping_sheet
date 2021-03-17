@@ -1,3 +1,6 @@
+## [3.0.0+1] - 17/03/2021
+* Fix image previews in README
+  
 ## [3.0.0] - 17/03/2021
 * **FULL REFACTORING OF PROJECT**. The package has gone through a full refactoring while adding null-safety. Be aware of many breaking changes, it is strongly recommended to read the documentation of this package again if updating from a earlier version of Snapping Sheet.
 * Added many many test for the package to make it more stable and easier to maintain in the feature.
