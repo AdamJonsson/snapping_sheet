@@ -179,7 +179,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   }
 
   set _currentPosition(double newPosition) {
-    widget.onSheetMoved?.call(_currentPosition);
+    widget.onSheetMoved?.call(newPosition);
     _currentPositionPrivate = newPosition;
   }
 
