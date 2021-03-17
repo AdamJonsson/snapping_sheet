@@ -1,3 +1,13 @@
+## [3.0.0] - 17/03/2021
+* **FULL REFACTORING OF PROJECT**. The package has gone through a full refactoring while adding null-safety. Be aware of many breaking changes, it is strongly recommended to read the documentation of this package again if updating from a earlier version of Snapping Sheet.
+* Added many many test for the package to make it more stable and easier to maintain in the feature.
+* The Snapping Sheet can now adapt to a scrollable widget located inside it.
+* To Snapping Sheet no longer gets stuck at certain positions.
+
+## [3.0.0-nullsafety.0] - 11/03/2021
+* First step for null-safety migration. Thanks to [ngxingyu](https://github.com/ngxingyu) for the PR!
+**Breaking change:** Replace positionFactor and positionPixel with position and added isFactor parameter.
+
 ## [2.0.2] - 30/11/2020
 * Fix bug where the snapping sheet could be stuck at the first snapping position when lockOverflowDrag is set to true. Thanks to [b1acKr0se](https://github.com/b1acKr0se) for finding a solution!
 **Breaking change:** Change the spelling from "manuel" to "manual" for the SnappingSheetHeight object.

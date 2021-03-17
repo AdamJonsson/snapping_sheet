@@ -8,21 +8,82 @@ import 'package:snapping_sheet/src/snapping_position.dart';
 import 'package:snapping_sheet/src/snapping_sheet_content.dart';
 
 class SnappingSheet extends StatefulWidget {
+  /// The content for the above part of the sheet.
+  ///
+  /// Needs to be of type
+  /// [SnappingSheetContent] where a widget can be passed in.
   final SnappingSheetContent? sheetAbove;
+
+  /// The content for the below part of the sheet.
+  ///
+  /// Needs to be of type
+  /// [SnappingSheetContent] where a widget can be passed in.
   final SnappingSheetContent? sheetBelow;
+
+  /// The grabbing widget that is used to indicate the the sheet can be dragged
+  /// up and down.
+  ///
+  /// If no widget is wanted, pass in a [SizedBox] with zero height
+  /// and set [grabbingHeight] to zero.
   final Widget grabbing;
+
+  /// The height of the grabbing widget.
   final double grabbingHeight;
+
+  /// The widget under the snapping sheet.
+  ///
+  /// Is often the main content of a page or app.
   final Widget child;
+
+  /// Prevents overflow drag.
+  ///
+  /// If set to true, the snapping sheet can not be dragged over or under the
+  /// highest or lowest [SnappingPosition].
   final bool lockOverflowDrag;
+
+  /// The snapping positions were the sheet can snap to.
+  ///
+  /// Takes a list of [SnappingPosition]. You can specify the location using a
+  /// factor or pixels.
+  ///
+  /// ```dart
+  /// SnappingPosition.factor(positionFactor: 0.25)
+  /// SnappingPosition.pixels(positionPixels: 420)
+  /// ```
+  ///
+  /// You also have the option to set duration and curve for each
+  /// [SnappingPosition].
+  ///
+  /// ```dart
+  /// SnappingPosition.factor(
+  ///   snappingCurve: Curves.bounceOut,
+  ///   snappingDuration: Duration(seconds: 1),
+  ///   positionFactor: 1.0,
+  /// ),
+  /// ```
   final List<SnappingPosition> snappingPositions;
+
+  /// The initial snapping position.
+  ///
+  /// If no value is given, the default value is the first snapping position
+  /// given in the [snappingPosition] parameter.
   final SnappingPosition? initialSnappingPosition;
+
+  /// The controller for executing commands and reading current status of the
+  /// [SnappingSheet]
   final SnappingSheetController? controller;
 
+  /// Callback for when the sheet moves.
+  ///
+  /// Is called every time the sheet moves, both when snapping and moving
+  /// the sheet manually.
   final Function(double position)? onSheetMoved;
+
+  /// Callback for when a snapping animation is completed.
   final Function(double position, SnappingPosition snappingPosition)?
       onSnapCompleted;
 
-  /// This is called when a snapping animation starts
+  /// This is called when a snapping animation starts.
   final Function(double position, SnappingPosition snappingPosition)?
       onSnapStart;
 
@@ -201,6 +262,19 @@ class _SnappingSheetState extends State<SnappingSheet>
               // The background of the snapping sheet
               Positioned.fill(child: widget.child),
 
+              // The grabber content
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: _currentPosition - widget.grabbingHeight / 2,
+                height: widget.grabbingHeight,
+                child: OnDragWrapper(
+                  dragEnd: _dragEnd,
+                  dragUpdate: _dragSheet,
+                  child: widget.grabbing,
+                ),
+              ),
+
               // The above sheet content
               SheetContentWrapper(
                 dragEnd: _dragEnd,
@@ -214,19 +288,6 @@ class _SnappingSheetState extends State<SnappingSheet>
                   grabbingHeight: widget.grabbingHeight,
                 ),
                 sheetData: widget.sheetAbove,
-              ),
-
-              // The grabber content
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: _currentPosition - widget.grabbingHeight / 2,
-                height: widget.grabbingHeight,
-                child: OnDragWrapper(
-                  dragEnd: _dragEnd,
-                  dragUpdate: _dragSheet,
-                  child: widget.grabbing,
-                ),
               ),
 
               // The below sheet content

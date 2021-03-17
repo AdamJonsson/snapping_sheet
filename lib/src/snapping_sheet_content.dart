@@ -9,7 +9,7 @@ enum SheetLocation {
 
 class SnappingSheetContent {
   /// The size behavior of the sheet. Can either be [SheetSizeStatic] or
-  /// [SheetSizeDynamic].
+  /// [SheetSizeFill].
   final SheetSizeBehavior sizeBehavior;
 
   /// When given a scroll controller that is attached to scrollable view, e.g
@@ -18,8 +18,10 @@ class SnappingSheetContent {
   ///
   /// OBS, the scrollable view needs to have the [reverse] parameter set to
   /// false if located in the below sheet and true if located in the above
-  /// sheet. Otherwise, the logic wont behave as intended.
+  /// sheet. Otherwise, the logic do not behave as intended.
   final ScrollController? childScrollController;
+
+  /// If the content should be draggable.
   final bool draggable;
   Widget _child;
   SheetLocation location = SheetLocation.unknown;
@@ -27,7 +29,7 @@ class SnappingSheetContent {
   SnappingSheetContent({
     required Widget child,
     this.draggable = false,
-    this.sizeBehavior = const SheetSizeDynamic(),
+    this.sizeBehavior = const SheetSizeFill(),
     this.childScrollController,
   }) : this._child = child;
 
