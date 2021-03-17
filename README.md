@@ -129,28 +129,30 @@ You can place content both below or/and above the grabbing part of the sheet. If
 ```
 
 ## Make SnappingSheet adapt to a scroll controller
-In order to make the sheet know about the scroll controller, you need to provide it in the SnappingSheetContent class (See example below). 
+In order to make the sheet know about the scroll controller, you need to provide it in the SnappingSheetContent class (See example below). It is recommended to set `lockOverflowDrag` to true to prevent the sheet to be dragged above or below its max and min snapping position.
 ```dart
-    sheetBelow: SnappingSheetContent(
-        // Pass in the scroll controller here!
-        childScrollController: _myScrollController,
-        draggable: true,
-        child: ListView(
-            // And in the scrollable widget that you create!
-            controller: _myScrollController,
+     SnappingSheet(
+        lockOverflowDrag: true, // (Recommended) Set this to true.
+        sheetBelow: SnappingSheetContent(
+            // Pass in the scroll controller here!
+            childScrollController: _myScrollController,
+            draggable: true,
+            child: ListView(
+                // And in the scrollable widget that you create!
+                controller: _myScrollController,
 
-            // OBS! Should be false if it is in sheetBelow.
-            // OBS! Should be true if it is in sheetAbove.
-            reverse: false,
+                // OBS! Should be false if it is in sheetBelow.
+                // OBS! Should be true if it is in sheetAbove.
+                reverse: false,
+            ),
         ),
-    ),
+    )
 ```
 **OBS** that the scrollable widget, e.g `ListView`, `SingleChildScrollView`, etc. needs to have the correct `reverse` value depending on were it is located. If the scrollable widget is in the sheetBelow, the reverse value should be set to false. If it is located in the sheetAbove it should be set to true. The reason is that the current logic of the SnappingSheet only support that configuration of a scrollable widget.  
 
 ## Using the SnappingSheetController
 You can control the Snapping Sheet using the `SnappingSheetController`
 ```dart
-
     // Create your controller
     final snappingSheetController = SnappingSheetController();
     SnappingSheet(
