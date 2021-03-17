@@ -38,7 +38,7 @@ A package that provides a highly customizable sheet widget that snaps to differe
             <img src="https://github.com/AdamJonsson/snapping_sheet/raw/3.0.0/assets/placeholder.gif" width="300">
         </td>
         <td>
-            <img src="https://github.com/AdamJonsson/snapping_sheet/blob/3.0.0/assets/preview_reverse.gif" width="300">
+            <img src="https://github.com/AdamJonsson/snapping_sheet/raw/3.0.0/assets/preview_reverse.gif" width="300">
         </td>
     </tr>
 </table>

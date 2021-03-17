@@ -1,3 +1,6 @@
+## [3.0.0+2] - 17/03/2021
+* Minor documentation changes
+  
 ## [3.0.0+1] - 17/03/2021
 * Fix image previews in README
   
