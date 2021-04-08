@@ -77,7 +77,7 @@ class SnappingSheet extends StatefulWidget {
   ///
   /// Is called every time the sheet moves, both when snapping and moving
   /// the sheet manually.
-  final Function(double position)? onSheetMoved;
+  final Function(double position, double maximumPosition)? onSheetMoved;
 
   /// Callback for when a snapping animation is completed.
   final Function(double position, SnappingPosition snappingPosition)?
@@ -179,7 +179,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   }
 
   set _currentPosition(double newPosition) {
-    widget.onSheetMoved?.call(newPosition);
+    widget.onSheetMoved?.call(newPosition, _latestConstraints!.maxHeight);
     _currentPositionPrivate = newPosition;
   }
 
