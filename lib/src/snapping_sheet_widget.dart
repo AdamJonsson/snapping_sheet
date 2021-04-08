@@ -3,6 +3,7 @@ import 'package:snapping_sheet/src/above_sheet_size_calculator.dart';
 import 'package:snapping_sheet/src/below_sheet_size_calculator.dart';
 import 'package:snapping_sheet/src/on_drag_wrapper.dart';
 import 'package:snapping_sheet/src/sheet_content_wrapper.dart';
+import 'package:snapping_sheet/src/snap_event_callback.dart';
 import 'package:snapping_sheet/src/snapping_calculator.dart';
 import 'package:snapping_sheet/src/snapping_position.dart';
 import 'package:snapping_sheet/src/snapping_sheet_content.dart';
@@ -80,12 +81,10 @@ class SnappingSheet extends StatefulWidget {
   final Function(double position, double maximumPosition)? onSheetMoved;
 
   /// Callback for when a snapping animation is completed.
-  final Function(double position, SnappingPosition snappingPosition)?
-      onSnapCompleted;
+  final SnapEventCallback? onSnapCompleted;
 
   /// This is called when a snapping animation starts.
-  final Function(double position, SnappingPosition snappingPosition)?
-      onSnapStart;
+  final SnapEventCallback? onSnapStart;
 
   SnappingSheet({
     Key? key,
@@ -141,7 +140,11 @@ class _SnappingSheetState extends State<SnappingSheet>
     });
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        widget.onSnapCompleted?.call(_currentPosition, _lastSnappingPosition);
+        widget.onSnapCompleted?.call(
+          _currentPosition,
+          _latestConstraints!.maxHeight,
+          _lastSnappingPosition,
+        );
       }
     });
 
@@ -217,7 +220,11 @@ class _SnappingSheetState extends State<SnappingSheet>
   }
 
   void _snapToPosition(SnappingPosition snappingPosition) {
-    widget.onSnapStart?.call(_currentPosition, snappingPosition);
+    widget.onSnapStart?.call(
+      _currentPosition,
+      _latestConstraints!.maxHeight,
+      snappingPosition,
+    );
     _animateToPosition(snappingPosition);
     _lastSnappingPosition = snappingPosition;
   }
