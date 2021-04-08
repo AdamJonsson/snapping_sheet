@@ -119,9 +119,6 @@ class _ScrollControllerOverrideState extends State<ScrollControllerOverride> {
   @override
   Widget build(BuildContext context) {
     return Listener(
-      onPointerDown: (_) {
-        print("Test");
-      },
       onPointerMove: (dragEvent) {
         _setDragDirection(dragEvent.delta.dy);
         _setLockPosition();
