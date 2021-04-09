@@ -216,13 +216,13 @@ class _SnappingSheetState extends State<SnappingSheet>
     _snapToPosition(bestSnappingPosition);
   }
 
-  void _snapToPosition(SnappingPosition snappingPosition) {
+  Future<void> _snapToPosition(SnappingPosition snappingPosition) async {
     widget.onSnapStart?.call(_currentPosition, snappingPosition);
-    _animateToPosition(snappingPosition);
+    await _animateToPosition(snappingPosition);
     _lastSnappingPosition = snappingPosition;
   }
 
-  void _animateToPosition(SnappingPosition snappingPosition) {
+  Future<void> _animateToPosition(SnappingPosition snappingPosition) async {
     _animationController.duration = snappingPosition.snappingDuration;
     var endPosition = snappingPosition.getPositionInPixels(
       _latestConstraints!.maxHeight,
@@ -238,7 +238,7 @@ class _SnappingSheetState extends State<SnappingSheet>
       ),
     );
     _animationController.reset();
-    _animationController.forward();
+    await _animationController.forward();
   }
 
   SnappingCalculator _getSnappingCalculator() {
@@ -345,9 +345,9 @@ class SnappingSheetController {
   }
 
   /// Snaps to a given snapping position.
-  void snapToPosition(SnappingPosition snappingPosition) {
+  Future<void> snapToPosition(SnappingPosition snappingPosition) async {
     _checkAttachment();
-    _state!._snapToPosition(snappingPosition);
+    await _state!._snapToPosition(snappingPosition);
   }
 
   /// This sets the position of the snapping sheet directly without any
