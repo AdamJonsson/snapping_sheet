@@ -4,7 +4,14 @@ abstract class SheetSizeBehavior {
 
 /// Fills the available hight in a sheet.
 class SheetSizeFill implements SheetSizeBehavior {
-  const SheetSizeFill();
+  /// If set to `true`, the [SnappingSheetContent.child] will be constrained
+  /// to the sheet's visible area as it expands.
+  ///
+  /// Otherwise, it will be constrained to the maximum size that the sheet can
+  /// expand to, and clipped.
+  final bool constrainToVisibleArea;
+
+  const SheetSizeFill({this.constrainToVisibleArea = true});
 }
 
 /// Make the sheet have a static height.
