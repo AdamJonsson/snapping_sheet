@@ -66,7 +66,8 @@ class _SheetContentWrapperState extends State<SheetContentWrapper> {
   Widget build(BuildContext context) {
     if (widget.sheetData == null) return SizedBox();
     return widget.sizeCalculator.positionWidget(
-      child: _wrapWithNecessaryWidgets(widget.sheetData!.child),
+      child: _wrapWithNecessaryWidgets(widget.sheetData!
+          .buildConstrainedChild(widget.sizeCalculator.maxHeight)),
     );
   }
 }

@@ -33,14 +33,22 @@ class SnappingSheetContent {
     this.childScrollController,
   }) : this._child = child;
 
-  double? _getHeight() {
+  double? _getHeight(double maxHeight) {
     var sizeBehavior = this.sizeBehavior;
     if (sizeBehavior is SheetSizeStatic) return sizeBehavior.height;
+    if (sizeBehavior is SheetSizeFill && !sizeBehavior.constrainToVisibleArea)
+      return maxHeight;
   }
 
-  Widget get child {
-    return SizedBox(
-      height: _getHeight(),
+  Widget buildConstrainedChild(double maxHeight) {
+    assert(location != SheetLocation.unknown,
+        'The location must be known to constrain the child!');
+    return OverflowBox(
+      alignment: location == SheetLocation.above
+          ? Alignment.bottomCenter
+          : Alignment.topCenter,
+      minHeight: _getHeight(maxHeight),
+      maxHeight: _getHeight(maxHeight),
       child: this._child,
     );
   }
