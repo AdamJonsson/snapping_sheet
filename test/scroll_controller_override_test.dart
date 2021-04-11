@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
+import 'package:snapping_sheet/src/sheet_position_data.dart';
 
 final _scrollHeight = 2000.0;
 
@@ -17,7 +18,7 @@ void main() {
           var snappingSheetSize = await _createSnappingSheet(
             tester,
             controller,
-            (pos, maxPos) => currentSheetPos = pos,
+            (pos) => currentSheetPos = pos.pixels,
             [
               SnappingPosition.factor(positionFactor: 0.25),
               SnappingPosition.factor(positionFactor: 0.5),
@@ -47,7 +48,7 @@ void main() {
           var snappingSheetSize = await _createSnappingSheet(
             tester,
             controller,
-            (pos, maxPos) => currentSheetPos = pos,
+            (pos) => currentSheetPos = pos.pixels,
             [
               SnappingPosition.factor(positionFactor: 0.25),
               SnappingPosition.factor(positionFactor: 0.5),
@@ -76,7 +77,7 @@ void main() {
         var snappingSheetSize = await _createSnappingSheet(
           tester,
           controller,
-          (pos, maxPos) => currentSheetPos = pos,
+          (pos) => currentSheetPos = pos.pixels,
           [
             SnappingPosition.factor(positionFactor: 1),
             SnappingPosition.factor(positionFactor: 0.5),
@@ -109,7 +110,7 @@ void main() {
           var snappingSheetSize = await _createSnappingSheet(
             tester,
             controller,
-            (pos, maxPos) => currentSheetPos = pos,
+            (pos) => currentSheetPos = pos.pixels,
             [
               SnappingPosition.factor(positionFactor: 0.75),
               SnappingPosition.factor(positionFactor: 0.5),
@@ -139,7 +140,7 @@ void main() {
           var snappingSheetSize = await _createSnappingSheet(
             tester,
             controller,
-            (pos, maxPos) => currentSheetPos = pos,
+            (pos) => currentSheetPos = pos.pixels,
             [
               SnappingPosition.factor(positionFactor: 0.75),
               SnappingPosition.factor(positionFactor: 0.5),
@@ -171,7 +172,7 @@ void main() {
           var snappingSheetSize = await _createSnappingSheet(
             tester,
             controller,
-            (pos, maxPos) => currentSheetPos = pos,
+            (pos) => currentSheetPos = pos.pixels,
             [
               SnappingPosition.factor(positionFactor: 0.0),
               SnappingPosition.factor(positionFactor: 0.6),
@@ -197,7 +198,7 @@ void main() {
 Future<Size> _createSnappingSheet(
   WidgetTester tester,
   ScrollController controller,
-  Function(double, double) onSheetMove,
+  Function(SheetPositionData) onSheetMove,
   List<SnappingPosition> snapPos,
   bool isAbove,
 ) async {
@@ -222,7 +223,7 @@ class _BasicSnappingSheet extends StatelessWidget {
   final List<SnappingPosition> positions;
   final double scrollHeight;
   final ScrollController controller;
-  final Function(double pos, double macPos) onMove;
+  final Function(SheetPositionData) onMove;
 
   _BasicSnappingSheet(
       {Key? key,

@@ -188,15 +188,15 @@ You can control the Snapping Sheet using the `SnappingSheetController`
 You can listen to movement and when a snapping animation is completed by using the following parameters:
 ```dart
     SnappingSheet(
-        onSheetMoved: (sheetPosition, maximumSheetPosition) {
-            print("Current position $sheetPosition");
+        onSheetMoved: (sheetPosition) {
+            print("Current position ${sheetPosition.pixels}");
         },
-        onSnapCompleted: (sheetPosition, maximumSheetPosition, snappingPosition) {
-            print("Current position $sheetPosition");
+        onSnapCompleted: (sheetPosition, snappingPosition) {
+            print("Current position ${sheetPosition.pixels}");
             print("Current snapping position $snappingPosition");
         },
-        onSnapStart: (sheetPosition, maximumSheetPosition, snappingPosition) {
-            print("Current position $sheetPosition");
+        onSnapStart: (sheetPosition, snappingPosition) {
+            print("Current position ${sheetPosition.pixels}");
             print("Next snapping position $snappingPosition");
         },
     )
