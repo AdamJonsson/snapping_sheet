@@ -18,7 +18,7 @@ void main() {
             SnappingPosition.factor(positionFactor: 1),
           ],
           controller: controller,
-          onMove: (pos) {
+          onMove: (pos, _) {
             currentSheetPos = pos;
           },
           contentBelow: null,
@@ -49,7 +49,7 @@ void main() {
             SnappingPosition.factor(positionFactor: 1),
           ],
           controller: controller,
-          onMove: (pos) {
+          onMove: (pos, _) {
             currentSheetPos = pos;
           },
           contentBelow: SnappingSheetContent(
@@ -85,7 +85,7 @@ void main() {
             SnappingPosition.factor(positionFactor: 1),
           ],
           controller: controller,
-          onMove: (pos) {
+          onMove: (pos, _) {
             currentSheetPos = pos;
           },
           contentBelow: SnappingSheetContent(
@@ -122,7 +122,7 @@ void main() {
         SnappingPosition.factor(positionFactor: 0.1),
       ],
       controller: controller,
-      onMove: (pos) => {},
+      onMove: (pos, _) => {},
       contentBelow: _createDummySheetContent(),
       contentAbove: null,
       child: Container(
@@ -164,7 +164,7 @@ SnappingSheetContent _createDummySheetContent() {
 Future<Size> _createSnappingSheet({
   required List<SnappingPosition> positions,
   required SnappingSheetController controller,
-  required Function(double pos) onMove,
+  required Function(double pos, double maxPos) onMove,
   required SnappingSheetContent? contentAbove,
   required SnappingSheetContent? contentBelow,
   required Widget child,
@@ -189,7 +189,7 @@ Future<Size> _createSnappingSheet({
 class _BasicSnappingSheet extends StatelessWidget {
   final List<SnappingPosition> positions;
   final SnappingSheetController controller;
-  final Function(double pos) onMove;
+  final Function(double pos, double maxPos) onMove;
   final SnappingSheetContent? contentAbove;
   final SnappingSheetContent? contentBelow;
   final Widget child;
