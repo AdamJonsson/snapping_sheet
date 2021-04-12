@@ -3,7 +3,7 @@ import 'package:snapping_sheet/src/above_sheet_size_calculator.dart';
 import 'package:snapping_sheet/src/below_sheet_size_calculator.dart';
 import 'package:snapping_sheet/src/on_drag_wrapper.dart';
 import 'package:snapping_sheet/src/sheet_content_wrapper.dart';
-import 'package:snapping_sheet/src/snap_event_callback.dart';
+import 'package:snapping_sheet/src/sheet_position_data.dart';
 import 'package:snapping_sheet/src/snapping_calculator.dart';
 import 'package:snapping_sheet/src/snapping_position.dart';
 import 'package:snapping_sheet/src/snapping_sheet_content.dart';
@@ -78,13 +78,19 @@ class SnappingSheet extends StatefulWidget {
   ///
   /// Is called every time the sheet moves, both when snapping and moving
   /// the sheet manually.
-  final Function(double position, double maximumPosition)? onSheetMoved;
+  final Function(SheetPositionData positionData)? onSheetMoved;
 
   /// Callback for when a snapping animation is completed.
-  final SnapEventCallback? onSnapCompleted;
+  final Function(
+    SheetPositionData positionData,
+    SnappingPosition snappingPosition,
+  )? onSnapCompleted;
 
   /// This is called when a snapping animation starts.
-  final SnapEventCallback? onSnapStart;
+  final Function(
+    SheetPositionData positionData,
+    SnappingPosition snappingPosition,
+  )? onSnapStart;
 
   SnappingSheet({
     Key? key,
@@ -129,7 +135,6 @@ class _SnappingSheetState extends State<SnappingSheet>
   void initState() {
     super.initState();
     _setSheetLocationData();
-
     _lastSnappingPosition = _initSnappingPosition;
     _animationController = AnimationController(vsync: this);
     _animationController.addListener(() {
@@ -141,8 +146,7 @@ class _SnappingSheetState extends State<SnappingSheet>
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         widget.onSnapCompleted?.call(
-          _currentPosition,
-          _latestConstraints!.maxHeight,
+          _createPositionData(),
           _lastSnappingPosition,
         );
       }
@@ -182,14 +186,21 @@ class _SnappingSheetState extends State<SnappingSheet>
   }
 
   set _currentPosition(double newPosition) {
-    widget.onSheetMoved?.call(newPosition, _latestConstraints!.maxHeight);
     _currentPositionPrivate = newPosition;
+    widget.onSheetMoved?.call(_createPositionData());
   }
 
   double get _currentPosition => _currentPositionPrivate;
 
   SnappingPosition get _initSnappingPosition {
     return widget.initialSnappingPosition ?? widget.snappingPositions.first;
+  }
+
+  SheetPositionData _createPositionData() {
+    return SheetPositionData(
+      _currentPosition,
+      _getSnappingCalculator(),
+    );
   }
 
   double _getNewPosition(double dragAmount) {
@@ -221,8 +232,7 @@ class _SnappingSheetState extends State<SnappingSheet>
 
   TickerFuture _snapToPosition(SnappingPosition snappingPosition) {
     widget.onSnapStart?.call(
-      _currentPosition,
-      _latestConstraints!.maxHeight,
+      _createPositionData(),
       snappingPosition,
     );
     _lastSnappingPosition = snappingPosition;
