@@ -197,14 +197,9 @@ class _SnappingSheetState extends State<SnappingSheet>
   }
 
   SheetPositionData _createPositionData() {
-    double pixels = _currentPosition;
-    var calculator = _getSnappingCalculator();
-    double minSnappingPos = calculator.getSmallestPositionPixels();
-    double maxSnappingPos = calculator.getBiggestPositionPixels();
     return SheetPositionData(
       _currentPosition,
-      pixels / _latestConstraints!.maxHeight,
-      (pixels - minSnappingPos) / (maxSnappingPos - minSnappingPos),
+      _getSnappingCalculator(),
     );
   }
 
