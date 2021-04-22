@@ -1,3 +1,10 @@
+## [3.1.0] - 22/04/2021
+* **New feature**: Horizontal snapping sheets are not possible using `SnappingSheet.horizontal(...)`!
+* **New feature**: `controller.snapToPosition` returns a future. 
+* **Breaking**: New and more callback data on moving events.
+* **Breaking**: `SheetSizeStatic(height: 123)` is now `SheetSizeStatic(size: 123)`.
+* Remove debug output
+  
 ## [3.0.0+2] - 17/03/2021
 * Minor documentation changes
   
