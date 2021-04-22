@@ -7,7 +7,7 @@
 [![likes](https://badges.bar/snapping_sheet/likes)](https://pub.dev/packages/snapping_sheet/score)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A package that provides a highly customizable sheet widget that snaps to different vertical positions
+A package that provides a highly customizable sheet widget that snaps to different vertical & horizontal positions
 </br></br>
 <table >
     <tr>
