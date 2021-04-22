@@ -13,6 +13,7 @@ class ScrollControllerOverride extends StatefulWidget {
   final VoidCallback dragEnd;
   final double currentPosition;
   final SnappingCalculator snappingCalculator;
+  final Axis axis;
 
   ScrollControllerOverride({
     required this.sizeCalculator,
@@ -23,6 +24,7 @@ class ScrollControllerOverride extends StatefulWidget {
     required this.snappingCalculator,
     required this.child,
     required this.sheetLocation,
+    required this.axis,
   });
 
   @override
@@ -120,9 +122,12 @@ class _ScrollControllerOverrideState extends State<ScrollControllerOverride> {
   Widget build(BuildContext context) {
     return Listener(
       onPointerMove: (dragEvent) {
-        _setDragDirection(dragEvent.delta.dy);
+        final dragValue = widget.axis == Axis.horizontal
+            ? -dragEvent.delta.dx
+            : dragEvent.delta.dy;
+        _setDragDirection(dragValue);
         _setLockPosition();
-        _overrideScroll(dragEvent.delta.dy);
+        _overrideScroll(dragValue);
       },
       onPointerUp: (_) {
         if (!_allowScrolling)

@@ -8,11 +8,13 @@ class BelowSheetSizeCalculator extends SheetSizeCalculator {
   final double currentPosition;
   final double maxHeight;
   final double grabbingHeight;
+  final Axis axis;
 
   BelowSheetSizeCalculator(
       {required this.sheetData,
       required this.currentPosition,
       required this.maxHeight,
+      required this.axis,
       required this.grabbingHeight})
       : super(sheetData, maxHeight);
 
@@ -28,6 +30,15 @@ class BelowSheetSizeCalculator extends SheetSizeCalculator {
 
   @override
   Positioned positionWidget({required Widget child}) {
+    if (this.axis == Axis.horizontal) {
+      return Positioned(
+        top: 0,
+        bottom: 0,
+        right: getSheetEndPosition(),
+        left: getSheetStartPosition(),
+        child: child,
+      );
+    }
     return Positioned(
       left: 0,
       right: 0,

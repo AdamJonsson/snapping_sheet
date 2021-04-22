@@ -16,7 +16,7 @@ abstract class SheetSizeCalculator {
     if (sizeBehavior is SheetSizeFill) return 0;
     if (sizeBehavior is SheetSizeStatic) {
       if (!sizeBehavior.expandOnOverflow) return null;
-      if (getVisibleHeight() > sizeBehavior.height) {
+      if (getVisibleHeight() > sizeBehavior.size) {
         return 0;
       }
     }

@@ -1,4 +1,4 @@
-import 'package:example/pages/getting_started_example.dart';
+import 'package:example/pages/horizontal_example.dart';
 import 'package:example/pages/placeholder_example.dart';
 import 'package:example/pages/preview_page.dart';
 import 'package:flutter/material.dart';
@@ -64,8 +64,8 @@ class Menu extends StatelessWidget {
                       color: Colors.grey[300],
                     ),
                     MenuButton(
-                      page: GettingStartedExample(),
-                      text: "Getting started example",
+                      page: HorizontalExample(),
+                      text: "Horizontal Example",
                       color: Colors.green[300],
                     ),
                   ],
