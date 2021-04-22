@@ -33,7 +33,7 @@ class SnappingSheet extends StatefulWidget {
   /// The widget under the snapping sheet.
   ///
   /// Is often the main content of a page or app.
-  final Widget child;
+  final Widget? child;
 
   /// Prevents overflow drag.
   ///
@@ -87,6 +87,8 @@ class SnappingSheet extends StatefulWidget {
   final Function(double position, SnappingPosition snappingPosition)?
       onSnapStart;
 
+  final Axis axis;
+
   SnappingSheet({
     Key? key,
     this.sheetAbove,
@@ -105,13 +107,45 @@ class SnappingSheet extends StatefulWidget {
       ),
     ],
     this.initialSnappingPosition,
-    required this.child,
+    this.child,
     this.lockOverflowDrag = false,
     this.controller,
     this.onSheetMoved,
     this.onSnapCompleted,
     this.onSnapStart,
-  })  : assert(snappingPositions.isNotEmpty),
+  })  : this.axis = Axis.vertical,
+        assert(snappingPositions.isNotEmpty),
+        super(key: key);
+
+  SnappingSheet.horizontal({
+    Key? key,
+    SnappingSheetContent? sheetRight,
+    SnappingSheetContent? sheetLeft,
+    this.grabbing = const SizedBox(),
+    double grabbingWidth = 0,
+    this.snappingPositions = const [
+      SnappingPosition.factor(
+        positionFactor: 0.0,
+        grabbingContentOffset: GrabbingContentOffset.top,
+      ),
+      SnappingPosition.factor(positionFactor: 0.5),
+      SnappingPosition.factor(
+        positionFactor: 1.0,
+        grabbingContentOffset: GrabbingContentOffset.bottom,
+      ),
+    ],
+    this.initialSnappingPosition,
+    this.child,
+    this.lockOverflowDrag = false,
+    this.controller,
+    this.onSheetMoved,
+    this.onSnapCompleted,
+    this.onSnapStart,
+  })  : this.sheetAbove = sheetRight,
+        this.sheetBelow = sheetLeft,
+        this.axis = Axis.horizontal,
+        this.grabbingHeight = grabbingWidth,
+        assert(snappingPositions.isNotEmpty),
         super(key: key);
 
   @override
@@ -148,7 +182,7 @@ class _SnappingSheetState extends State<SnappingSheet>
     Future.delayed(Duration(seconds: 0)).then((value) {
       setState(() {
         _currentPosition = _initSnappingPosition.getPositionInPixels(
-          _latestConstraints!.maxHeight,
+          sheetSize,
           widget.grabbingHeight,
         );
       });
@@ -225,7 +259,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   void _animateToPosition(SnappingPosition snappingPosition) {
     _animationController.duration = snappingPosition.snappingDuration;
     var endPosition = snappingPosition.getPositionInPixels(
-      _latestConstraints!.maxHeight,
+      sheetSize,
       widget.grabbingHeight,
     );
     _snappingAnimation = Tween(
@@ -245,9 +279,40 @@ class _SnappingSheetState extends State<SnappingSheet>
     return SnappingCalculator(
         allSnappingPositions: widget.snappingPositions,
         lastSnappingPosition: _lastSnappingPosition,
-        maxHeight: _latestConstraints!.maxHeight,
+        maxHeight: sheetSize,
         grabbingHeight: widget.grabbingHeight,
         currentPosition: _currentPosition);
+  }
+
+  double get sheetSize {
+    return widget.axis == Axis.horizontal
+        ? _latestConstraints!.maxWidth
+        : _latestConstraints!.maxHeight;
+  }
+
+  Widget buildGrabbingWidget() {
+    final position = _currentPosition - widget.grabbingHeight / 2;
+    final dragWrapper = OnDragWrapper(
+      axis: widget.axis,
+      dragEnd: _dragEnd,
+      dragUpdate: _dragSheet,
+      child: widget.grabbing,
+    );
+    if (widget.axis == Axis.horizontal)
+      return Positioned(
+        left: position,
+        bottom: 0,
+        top: 0,
+        width: widget.grabbingHeight,
+        child: dragWrapper,
+      );
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: position,
+      height: widget.grabbingHeight,
+      child: dragWrapper,
+    );
   }
 
   @override
@@ -260,31 +325,23 @@ class _SnappingSheetState extends State<SnappingSheet>
           child: Stack(
             children: [
               // The background of the snapping sheet
-              Positioned.fill(child: widget.child),
+              if (widget.child != null) Positioned.fill(child: widget.child!),
 
               // The grabber content
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: _currentPosition - widget.grabbingHeight / 2,
-                height: widget.grabbingHeight,
-                child: OnDragWrapper(
-                  dragEnd: _dragEnd,
-                  dragUpdate: _dragSheet,
-                  child: widget.grabbing,
-                ),
-              ),
+              buildGrabbingWidget(),
 
               // The above sheet content
               SheetContentWrapper(
+                axis: widget.axis,
                 dragEnd: _dragEnd,
                 dragUpdate: _dragSheet,
                 currentPosition: _currentPosition,
                 snappingCalculator: _getSnappingCalculator(),
                 sizeCalculator: AboveSheetSizeCalculator(
+                  axis: widget.axis,
                   sheetData: widget.sheetAbove,
                   currentPosition: _currentPosition,
-                  maxHeight: constraints.maxHeight,
+                  maxHeight: sheetSize,
                   grabbingHeight: widget.grabbingHeight,
                 ),
                 sheetData: widget.sheetAbove,
@@ -292,14 +349,16 @@ class _SnappingSheetState extends State<SnappingSheet>
 
               // The below sheet content
               SheetContentWrapper(
+                axis: widget.axis,
                 dragEnd: _dragEnd,
                 dragUpdate: _dragSheet,
                 currentPosition: _currentPosition,
                 snappingCalculator: _getSnappingCalculator(),
                 sizeCalculator: BelowSheetSizeCalculator(
+                  axis: widget.axis,
                   sheetData: widget.sheetBelow,
                   currentPosition: _currentPosition,
-                  maxHeight: constraints.maxHeight,
+                  maxHeight: sheetSize,
                   grabbingHeight: widget.grabbingHeight,
                 ),
                 sheetData: widget.sheetBelow,
@@ -321,7 +380,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   void _setSheetPositionFactor(double factor) {
     _animationController.stop();
     setState(() {
-      _currentPosition = factor * _latestConstraints!.maxHeight;
+      _currentPosition = factor * sheetSize;
     });
   }
 }

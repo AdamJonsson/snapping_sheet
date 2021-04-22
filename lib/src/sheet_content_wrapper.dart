@@ -13,6 +13,7 @@ class SheetContentWrapper extends StatefulWidget {
   final VoidCallback dragEnd;
   final double currentPosition;
   final SnappingCalculator snappingCalculator;
+  final Axis axis;
 
   const SheetContentWrapper(
       {Key? key,
@@ -21,7 +22,8 @@ class SheetContentWrapper extends StatefulWidget {
       required this.currentPosition,
       required this.snappingCalculator,
       required this.dragUpdate,
-      required this.dragEnd})
+      required this.dragEnd,
+      required this.axis})
       : super(key: key);
 
   @override
@@ -31,6 +33,7 @@ class SheetContentWrapper extends StatefulWidget {
 class _SheetContentWrapperState extends State<SheetContentWrapper> {
   Widget _wrapWithDragWrapper(Widget child) {
     return OnDragWrapper(
+      axis: widget.axis,
       dragEnd: widget.dragEnd,
       child: child,
       dragUpdate: widget.dragUpdate,
@@ -39,6 +42,7 @@ class _SheetContentWrapperState extends State<SheetContentWrapper> {
 
   Widget _wrapWithScrollControllerOverride(Widget child) {
     return ScrollControllerOverride(
+      axis: widget.axis,
       sizeCalculator: widget.sizeCalculator,
       scrollController: widget.sheetData!.childScrollController!,
       dragUpdate: widget.dragUpdate,

@@ -6,6 +6,7 @@ import 'package:snapping_sheet/src/below_sheet_size_calculator.dart';
 void main() {
   group('Testing with dynamic size.', () {
     var sizeCalculator = BelowSheetSizeCalculator(
+      axis: Axis.vertical,
       currentPosition: 200,
       grabbingHeight: 50,
       maxHeight: 1000,
@@ -28,6 +29,7 @@ void main() {
 
   group('Testing with static size and not expanding on overflow.', () {
     var sizeCalculator = BelowSheetSizeCalculator(
+      axis: Axis.vertical,
       currentPosition: 700,
       grabbingHeight: 50,
       maxHeight: 1000,
@@ -36,7 +38,7 @@ void main() {
         draggable: false,
         sizeBehavior: SheetSizeStatic(
           expandOnOverflow: false,
-          height: 500,
+          size: 500,
         ),
       ),
     );
@@ -53,6 +55,7 @@ void main() {
 
   group('Testing with static size and expanding on overflow.', () {
     var sizeCalculator = BelowSheetSizeCalculator(
+      axis: Axis.vertical,
       currentPosition: 700,
       grabbingHeight: 50,
       maxHeight: 1000,
@@ -61,7 +64,7 @@ void main() {
         draggable: false,
         sizeBehavior: SheetSizeStatic(
           expandOnOverflow: true,
-          height: 500,
+          size: 500,
         ),
       ),
     );

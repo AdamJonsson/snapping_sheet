@@ -44,11 +44,11 @@ A package that provides a highly customizable sheet widget that snaps to differe
 </table>
 </br>
 
-You can find and run the examples closing this repository and running the app from the [example](https://github.com/AdamJonsson/snapping_sheet/example/) folder.
+You can find and run the examples closing this repository and running the app from the [example](https://github.com/AdamJonsson/snapping_sheet/tree/main/example) folder.
 
 ## Getting started
 
-As usual, begin by adding the package to your pubspec.yaml file, see [install instruction](https://pub.dev/packages/snapping_sheet#-installing-tab-).
+As usual, begin by adding the package to your pubspec.yaml file, see [install instruction](https://pub.dev/packages/snapping_sheet/install).
 
 Here is the most basic setup with the Snapping Sheet:
 ```dart
@@ -61,12 +61,12 @@ Here is the most basic setup with the Snapping Sheet:
             return Scaffold(
                 body: SnappingSheet(
                     // TODO: Add your content that is placed
-                    // behind the sheet.
+                    // behind the sheet. (Can be left empty)
                     child: MyOwnPageContent(), 
                     grabbingHeight: 75,
                     // TODO: Add your grabbing widget here,
                     grabbing: MyOwnGrabbingWidget(),
-                    sheetAbove: SnappingSheetContent(
+                    sheetBelow: SnappingSheetContent(
                         draggable: true,
                         // TODO: Add your sheet content here
                         child: MyOwnSheetContent(),
@@ -121,7 +121,7 @@ You can place content both below or/and above the grabbing part of the sheet. If
             child: Container(color: Colors.blue),
         ),
         sheetBelow: SnappingSheetContent(
-            sizeBehavior: SheetSizeStatic(height: 300),
+            sizeBehavior: SheetSizeStatic(size: 300),
             draggable: true,
             child: Container(color: Colors.red),
         ),
@@ -201,3 +201,22 @@ You can listen to movement and when a snapping animation is completed by using t
         },
     )
 ```
+
+## Horizontal Snapping Sheet
+There also exist a horizontal mode for the snapping sheet. To use it, see the code below:
+```dart
+    SnappingSheet.horizontal(
+        // TODO: Add your content that is placed
+        // behind the sheet. (Can be left empty)
+        child: MyOwnPageContent(), 
+        grabbingWidth: 50,
+        // TODO: Add your grabbing widget here,
+        grabbing: MyOwnGrabbingWidget(),
+        sheetLeft: SnappingSheetContent(
+            draggable: true,
+            // TODO: Add your sheet content here
+            child: MyOwnSheetContent(),
+        ),
+    ),
+```
+A more complex example of a horizontal SnappingSheet can be found [here](https://github.com/AdamJonsson/snapping_sheet/blob/main/example/lib/pages/horizontal_example.dart).

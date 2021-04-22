@@ -35,7 +35,7 @@ class SnappingSheetContent {
 
   double? _getHeight() {
     var sizeBehavior = this.sizeBehavior;
-    if (sizeBehavior is SheetSizeStatic) return sizeBehavior.height;
+    if (sizeBehavior is SheetSizeStatic) return sizeBehavior.size;
   }
 
   Widget get child {
