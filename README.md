@@ -155,10 +155,12 @@ You can control the Snapping Sheet using the `SnappingSheetController`
 ```dart
     // Create your controller
     final snappingSheetController = SnappingSheetController();
+
+    // Inside were you are building the content of the widget.
     SnappingSheet(
 
         // Connect it to the SnappingSheet
-        controller: SnappingSheetController();
+        controller: snappingSheetController,
 
         sheetAbove: SnappingSheetContent(
             draggable: false,
