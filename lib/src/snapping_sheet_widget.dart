@@ -30,6 +30,9 @@ class SnappingSheet extends StatefulWidget {
 
   /// The height of the grabbing widget.
   final double grabbingHeight;
+  
+  // Required if attached to top to fix first frame issues
+  final bool reverse;
 
   /// The widget under the snapping sheet.
   ///
@@ -118,6 +121,7 @@ class SnappingSheet extends StatefulWidget {
     this.onSheetMoved,
     this.onSnapCompleted,
     this.onSnapStart,
+    this.reverse = false,
   })  : this.axis = Axis.vertical,
         assert(snappingPositions.isNotEmpty),
         super(key: key);
@@ -148,6 +152,7 @@ class SnappingSheet extends StatefulWidget {
     this.onSnapStart,
   })  : this.sheetAbove = sheetRight,
         this.sheetBelow = sheetLeft,
+        this.reverse = false,
         this.axis = Axis.horizontal,
         this.grabbingHeight = grabbingWidth,
         assert(snappingPositions.isNotEmpty),
@@ -168,6 +173,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   @override
   void initState() {
     super.initState();
+    _currentPositionPrivate = widget.reverse ? double.maxFinite : 0;
     _setSheetLocationData();
     _lastSnappingPosition = _initSnappingPosition;
     _animationController = AnimationController(vsync: this);
