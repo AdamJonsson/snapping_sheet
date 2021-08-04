@@ -84,6 +84,14 @@ void main() {
       );
       expect(snappingPosition.getPositionInPixels(1000, 100), 1200);
     });
+    test('Testing respect max height', () {
+      var snappingPosition = SnappingPosition.pixels(
+        positionPixels: 1200,
+        grabbingContentOffset: GrabbingContentOffset.middle,
+        respectMaxHeight: true,
+      );
+      expect(snappingPosition.getPositionInPixels(1000, 100), 1000);
+    });
     test('Testing undershoot position', () {
       var snappingPosition = SnappingPosition.pixels(
         positionPixels: -1200,
