@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
 
 /// This class is an helper class for specifying the [grabbingContentOffset]
@@ -47,12 +49,16 @@ class SnappingPosition {
   /// The snapping duration
   final Duration snappingDuration;
 
+  /// Whether to respect max height when snapping to new position via pixels
+  final bool respectMaxHeight;
+
   /// Creates a snapping position that is given by the amount of pixels
   const SnappingPosition.pixels({
     required double positionPixels,
     this.snappingCurve = Curves.ease,
     this.snappingDuration = const Duration(milliseconds: 250),
     this.grabbingContentOffset = GrabbingContentOffset.middle,
+    this.respectMaxHeight = false,
   })  : this._positionPixel = positionPixels,
         this._positionFactor = null;
 
@@ -65,7 +71,8 @@ class SnappingPosition {
     this.snappingDuration = const Duration(milliseconds: 250),
     this.grabbingContentOffset = GrabbingContentOffset.middle,
   })  : this._positionPixel = null,
-        this._positionFactor = positionFactor;
+        this._positionFactor = positionFactor,
+        this.respectMaxHeight = false;
 
   double getPositionInPixels(double maxHeight, double grabbingHeight) {
     var centerPosition = this._getCenterPositionInPixels(maxHeight);
@@ -74,7 +81,10 @@ class SnappingPosition {
   }
 
   double _getCenterPositionInPixels(double maxHeight) {
-    if (this._positionPixel != null) return this._positionPixel!;
+    if (this._positionPixel != null) {
+      if (respectMaxHeight) return min(maxHeight, this._positionPixel!);
+      return this._positionPixel!;
+    }
     return this._positionFactor! * maxHeight;
   }
 
