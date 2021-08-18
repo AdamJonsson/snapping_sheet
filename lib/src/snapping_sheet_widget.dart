@@ -334,6 +334,9 @@ class _SnappingSheetState extends State<SnappingSheet>
 
   @override
   Widget build(BuildContext context) {
+    if (widget.controller != null) {
+      widget.controller!._attachState(this);
+    }
     return LayoutBuilder(
       builder: (context, constraints) {
         _latestConstraints = constraints;
