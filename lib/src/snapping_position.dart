@@ -32,7 +32,7 @@ class SnappingPosition {
   /// ```
   ///
   /// Or if you have a snapping position at the bottom of the screen, you
-  /// usually use [GrabbingContentOffset.bottom]. See example:
+  /// usually use [GrabbingContentOffset.top]. See example:
   /// ```dart
   /// SnappingPosition.factor(
   ///   positionFactor: 0.0,
