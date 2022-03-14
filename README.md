@@ -158,7 +158,7 @@ You can control the Snapping Sheet using the `SnappingSheetController`
     SnappingSheet(
 
         // Connect it to the SnappingSheet
-        controller: SnappingSheetController();
+        controller: snappingSheetController;
 
         sheetAbove: SnappingSheetContent(
             draggable: false,
