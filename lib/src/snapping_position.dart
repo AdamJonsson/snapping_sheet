@@ -13,8 +13,14 @@ class GrabbingContentOffset {
   static const bottom = -1.0;
 }
 
+/// Define the pixel snapping position to be offset either from the start (bottom/left)
+/// or the end (top/right) of the snapping sheet.
+enum SnappingPositionAnchor { start, end }
+
 class SnappingPosition {
   final double? _positionPixel;
+  final SnappingPositionAnchor? _positionPixelAnchor;
+
   final double? _positionFactor;
 
   /// The snapping position alignment regarding the grabbing content.
@@ -50,10 +56,12 @@ class SnappingPosition {
   /// Creates a snapping position that is given by the amount of pixels
   const SnappingPosition.pixels({
     required double positionPixels,
+    SnappingPositionAnchor positionAnchor = SnappingPositionAnchor.start,
     this.snappingCurve = Curves.ease,
     this.snappingDuration = const Duration(milliseconds: 250),
     this.grabbingContentOffset = GrabbingContentOffset.middle,
   })  : this._positionPixel = positionPixels,
+        this._positionPixelAnchor = positionAnchor,
         this._positionFactor = null;
 
   /// Creates a snapping position that is given a positionFactor
@@ -65,6 +73,7 @@ class SnappingPosition {
     this.snappingDuration = const Duration(milliseconds: 250),
     this.grabbingContentOffset = GrabbingContentOffset.middle,
   })  : this._positionPixel = null,
+        this._positionPixelAnchor = null,
         this._positionFactor = positionFactor;
 
   double getPositionInPixels(double maxHeight, double grabbingHeight) {
@@ -74,7 +83,12 @@ class SnappingPosition {
   }
 
   double _getCenterPositionInPixels(double maxHeight) {
-    if (this._positionPixel != null) return this._positionPixel!;
+    if (this._positionPixel != null) {
+      switch(_positionPixelAnchor!) {
+        case SnappingPositionAnchor.start: return this._positionPixel!;
+        case SnappingPositionAnchor.end: return maxHeight - this._positionPixel!;
+      }
+    }
     return this._positionFactor! * maxHeight;
   }
 
