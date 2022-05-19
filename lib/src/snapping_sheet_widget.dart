@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:snapping_sheet/src/above_sheet_size_calculator.dart';
 import 'package:snapping_sheet/src/below_sheet_size_calculator.dart';
@@ -159,7 +160,7 @@ class SnappingSheet extends StatefulWidget {
 
 class _SnappingSheetState extends State<SnappingSheet>
     with TickerProviderStateMixin {
-  double _currentPositionPrivate = 0;
+  ValueNotifier<double> _currentPositionPrivate = ValueNotifier(0);
   BoxConstraints? _latestConstraints;
   late SnappingPosition _lastSnappingPosition;
   late AnimationController _animationController;
@@ -220,11 +221,11 @@ class _SnappingSheetState extends State<SnappingSheet>
   }
 
   set _currentPosition(double newPosition) {
-    _currentPositionPrivate = newPosition;
+    _currentPositionPrivate.value = newPosition;
     widget.onSheetMoved?.call(_createPositionData());
   }
 
-  double get _currentPosition => _currentPositionPrivate;
+  double get _currentPosition => _currentPositionPrivate.value;
 
   SnappingPosition get _initSnappingPosition {
     return widget.initialSnappingPosition ?? widget.snappingPositions.first;
@@ -402,7 +403,7 @@ class _SnappingSheetState extends State<SnappingSheet>
   }
 }
 
-class SnappingSheetController {
+class SnappingSheetController implements Listenable {
   _SnappingSheetState? _state;
 
   /// If a state is attached to this controller. [isAttached] must be true
@@ -468,4 +469,12 @@ class SnappingSheetController {
     _checkAttachment();
     return _state!._animationController.stop();
   }
+
+  @override
+  void addListener(VoidCallback listener) =>
+      _state?._currentPositionPrivate.addListener(listener);
+
+  @override
+  void removeListener(VoidCallback listener) =>
+      _state?._currentPositionPrivate.removeListener(listener);
 }
